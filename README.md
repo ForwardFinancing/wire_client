@@ -1,3 +1,7 @@
+[![Code Climate](https://api.codeclimate.com/v1/badges/055840fb4eaf9e44ec80/maintainability)](https://codeclimate.com/repos/5a6a6058396682027c0028f6/maintainability)
+
+[![Test Coverage](https://api.codeclimate.com/v1/badges/055840fb4eaf9e44ec80/test_coverage)](https://codeclimate.com/repos/5a6a6058396682027c0028f6/test_coverage)
+
 # WireClient
 
 ## Overview
