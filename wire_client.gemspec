@@ -1,13 +1,14 @@
 # coding: utf-8
 lib = File.expand_path('../lib', __FILE__)
 $LOAD_PATH.unshift(lib) unless $LOAD_PATH.include?(lib)
-require 'wiere_client/version'
+require 'wire_client/version'
 
 Gem::Specification.new do |spec|
   spec.name = 'wire_client'
   spec.version = WireClient::VERSION
   spec.authors = [
-    'Forward Financing '
+    'Ewerton Carlos Assis',
+    'Forward Financing LLC'
   ]
   spec.email = [
     'eassis@forwardfinancing.com'
@@ -24,8 +25,7 @@ Gem::Specification.new do |spec|
   spec.bindir = 'exe'
   spec.executables = spec.files.grep(%r{^exe/}) { |f| File.basename(f) }
   spec.require_paths = [
-    'lib',
-    'config'
+    'lib'
   ]
 
   # ach_client library
@@ -33,6 +33,9 @@ Gem::Specification.new do |spec|
 
   # Handy ruby behavior from rails
   spec.add_dependency 'activesupport'
+
+  # SEPA King, for the ISO 20022 Credit Transfer Initiation (pain.001.001.03 format)
+  spec.add_dependency 'sepa_king'
 
   # SFTP client (for Bank providers)
   spec.add_dependency 'net-sftp'
