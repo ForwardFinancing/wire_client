@@ -1,7 +1,7 @@
 require 'test_helper'
 
 class AbstractProvider
-  class WireBatchTest < MiniTest::Test
+  class AbstractWireBatchTest < MiniTest::Test
     def test_abstractfulness
       assert_raises(AbstractMethodError) do
         WireClient::Abstract::WireBatch.new(

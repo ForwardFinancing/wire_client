@@ -14,11 +14,23 @@ module WireClient
       # @return [String] Debtor's or creditor's IBAN (International Bank Account Number) ID
       class_attribute :initiator_iban
 
-      # @return [String] Debtor's or creditor's bank SWIFT Code
-      class_attribute :initiator_swift_code
+      # @return [String] Debtor's or creditor's bank SWIFT Code / BIC
+      class_attribute :initiator_bic
 
-      # @return [String] Only used for Debit transactions, its the creditor's Identifier
-      class_attribute :initiator_creditor_identifier
+      # @return [String] Debtor's or creditor's Account Number
+      class_attribute :initiator_account_number
+
+      # @return [String] Debtor or creditor agent's wire routing number
+      class_attribute :initiator_wire_routing_number
+
+      # @return [String] The initiating party's Identifier
+      class_attribute :initiator_identifier
+
+      # @return [String] The initiating party's country (2 character country code; default: US)
+      class_attribute :initiator_country
+
+      # @return [String] The initiating party's country subdivision (name or 2 character code; default: MA)
+      class_attribute :initiator_country_subdivision
 
       ##
       # @return [Array] A list of arguments to use in the initializer, and as
@@ -42,35 +54,27 @@ module WireClient
           )
         end
         if @transaction_type == WireClient::TransactionTypes::Credit
-          @sepa_transfer = SEPA::CreditTransfer.new(
-            name: self.class.initiator_name,
-            bic: self.class.initiator_swift_code,
-            iban: self.class.initiator_iban
-          )
+          initialize_payment_initiation(CreditTransfer)
         elsif @transaction_type == WireClient::TransactionTypes::Debit
-          @sepa_transfer = SEPA::DirectDebit.new(
-            name: self.class.initiator_name,
-            bic: self.class.initiator_swift_code,
-            iban: self.class.initiator_iban,
-            creditor_identifier: self.class.initiator_creditor_identifier
-          )
+          initialize_payment_initiation(DirectDebit)
         else
           raise InvalidWireTransactionTypeError, 'Transactions type cannot be inferred and should be explicitly defined'
         end
       end
 
       def add_transaction(transaction_options)
-        @sepa_transfer.add_transaction(uniform_transaction_options(transaction_options))
+        @payment_inititation.add_transaction(transaction_options)
       end
 
       ##
       # Sends the batch to the provider. Useful to check transaction status
       #   before sending any data (consistency, validation, etc.)
       def send_batch
-        if @sepa_transfer.valid?
+        if @payment_inititation.valid?
           do_send_batch
         else
-          raise InvalidWireTransactionError
+          raise InvalidWireTransactionError,
+            "wire transfer is invalid: #{@payment_inititation.errors.full_messages.join("\n")}"
         end
       end
 
@@ -82,25 +86,26 @@ module WireClient
 
       private
 
-      def uniform_transaction_options(transaction_options)
-        if @transaction_type == WireClient::TransactionTypes::Debit
-          [
-            [:local_instrument, 'B2B'],
-            [:sequence_type, 'OOFF']
-          ].each do |key, default_value|
-            transaction_options[key] = default_value unless transaction_options[key].present?
-          end
+      def initialize_payment_initiation(klass)
+        if self.class.initiator_iban
+          @payment_inititation = klass.new(
+            name: self.class.initiator_name,
+            bic: self.class.initiator_bic,
+            iban: self.class.initiator_iban,
+            identifier: self.class.initiator_identifier,
+            country: self.class.initiator_country,
+            country_subdivision: self.class.initiator_country_subdivision
+          )
+        else
+          @payment_inititation = klass.new(
+            name: self.class.initiator_name,
+            wire_routing_number: self.class.initiator_wire_routing_number,
+            account_number: self.class.initiator_account_number,
+            identifier: self.class.initiator_identifier,
+            country: self.class.initiator_country,
+            country_subdivision: self.class.initiator_country_subdivision
+          )
         end
-
-        [
-          [:receptor_name, :name],
-          [:receptor_swift_code, :bic],
-          [:receptor_iban, :iban]
-        ].each do |origin, destination|
-          transaction_options[destination] = transaction_options.delete(origin)
-        end
-        transaction_options[:currency] = 'USD' unless transaction_options[:currency].present?
-        transaction_options
       end
     end
   end

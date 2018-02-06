@@ -4,9 +4,16 @@
 
 # WireClient
 
+> Implementation of ISO 20022 payment initiation (pain) messages and bank providers for wire transfers
+
 ## Overview
 
-The WireClient gem provides a common interface for working with a variety of Wire Transfer providers.
+The WireClient gem provides a common interface for working with a variety of Wire Transfer providers
+and building ISO 20022 payment initiation (pain) messages &mdash; currently, only `pain.001.001.03`
+and `pain.008.001.02` messages are supported.
+
+This is a fork of the [`sepa_king`](https://github.com/salesking/sepa_king) Ruby gem. Our main purpose
+is to create a flexible solution appliable to the American financial system.
 
 ## Installation
 

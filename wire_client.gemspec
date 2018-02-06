@@ -15,7 +15,7 @@ Gem::Specification.new do |spec|
   ]
   spec.licenses = ['MIT']
 
-  spec.summary = %q{ Adapter to interact with Wire Transfer service providers }
+  spec.summary = %q{ Implementation of ISO 20022 payment initiation (pain) messages and bank providers for wire transfers }
   spec.homepage = 'https://github.com/ForwardFinancing/wire_client'
 
   spec.files = `git ls-files -z`.split(/\x0/)
@@ -25,7 +25,8 @@ Gem::Specification.new do |spec|
   spec.bindir = 'exe'
   spec.executables = spec.files.grep(%r{^exe/}) { |f| File.basename(f) }
   spec.require_paths = [
-    'lib'
+    'lib',
+    'schemas'
   ]
 
   # ach_client library
@@ -33,9 +34,13 @@ Gem::Specification.new do |spec|
 
   # Handy ruby behavior from rails
   spec.add_dependency 'activesupport'
+  spec.add_dependency 'activemodel'
 
-  # SEPA King, for the ISO 20022 Credit Transfer Initiation (pain.001.001.03 format)
-  spec.add_dependency 'sepa_king'
+  # Provide a simple way to create XML markup and data structures
+  spec.add_dependency 'builder'
+
+  # Used for IBAN validations
+  spec.add_dependency 'iban-tools'
 
   # SFTP client (for Bank providers)
   spec.add_dependency 'net-sftp'
@@ -56,4 +61,5 @@ Gem::Specification.new do |spec|
   spec.add_development_dependency 'webmock'
   spec.add_development_dependency 'yard'
   spec.add_development_dependency 'bundler-audit'
+  spec.add_development_dependency 'nokogiri'
 end

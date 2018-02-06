@@ -1,18 +1,19 @@
 require 'test_helper'
 
 class SftpProvider
-  class WireBatchTest < MiniTest::Test
+  class WireDebitBatchTest < MiniTest::Test
     def eur_credit_batch
       sample = WireClient::HSHNordbankHamburg::WireBatch.new(
         transaction_type: WireClient::TransactionTypes::Debit
       )
       sample.add_transaction(
-        receptor_name: 'Zahlemann & Söhne GbR',
-        receptor_swift_code: 'SPUEDE2UXXX',
-        receptor_iban: 'DE21500500009876543210',
+        name: 'Zahlemann & Söhne GbR',
+        bic: 'SPUEDE2UXXX',
+        iban: 'DE21500500009876543210',
         amount: 102.50,
         mandate_date_of_signature: Date.new(2016,8,11),
         mandate_id: 'K-02-2011-12345',
+        country: 'GR',
         currency: 'EUR'
       )
       sample
@@ -23,13 +24,14 @@ class SftpProvider
         transaction_type: WireClient::TransactionTypes::Debit
       )
       sample.add_transaction(
-        receptor_name: 'Zahlemann & Söhne GbR',
-        receptor_swift_code: 'SPUEDE2UXXX',
-        receptor_iban: 'DE21500500009876543210',
+        name: 'Zahlemann & Söhne GbR',
+        bic: 'SPUEDE2UXXX',
+        iban: 'DE21500500009876543210',
         amount: 102.50,
         mandate_date_of_signature: Date.new(2016,8,11),
         mandate_id: 'K-02-2011-12345',
-        #currency: 'USD' # by default
+        country: 'GR',
+        currency: 'EUR'
       )
       sample
     end
@@ -52,6 +54,7 @@ class SftpProvider
         assert_equal "/root/wire_sandbox/Inbox/WIRE08111601.xml", file_path
         assert_includes file_body, "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<Document xmlns=\"urn:iso:std:iso:20022:tech:xsd:pain.008.001.02\" xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xsi:schemaLocation=\"urn:iso:std:iso:20022:tech:xsd:pain.008.001.02 pain.008.001.02.xsd\">"
         assert_includes file_body, "<CreDtTm>2016-08-11"
+        assert_includes file_body, "<ChrgBr>DEBT</ChrgBr>"
         assert_includes file_body, "<Nm>Business from Germany</Nm>"
         assert_includes file_body, "<IBAN>#{WireClient::HSHNordbankHamburg::WireBatch.initiator_iban}</IBAN>"
         assert_includes file_body, "<InstdAmt Ccy=\"EUR\">102.50</InstdAmt>"
@@ -68,9 +71,10 @@ class SftpProvider
         assert_equal "/root/wire_sandbox/Inbox/WIRE08111601.xml", file_path
         assert_includes file_body, "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<Document xmlns=\"urn:iso:std:iso:20022:tech:xsd:pain.008.001.02\" xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xsi:schemaLocation=\"urn:iso:std:iso:20022:tech:xsd:pain.008.001.02 pain.008.001.02.xsd\">"
         assert_includes file_body, "<CreDtTm>2016-08-11"
+        assert_includes file_body, "<ChrgBr>DEBT</ChrgBr>"
         assert_includes file_body, "<Nm>Business from Germany</Nm>"
         assert_includes file_body, "<IBAN>#{WireClient::HSHNordbankHamburg::WireBatch.initiator_iban}</IBAN>"
-        assert_includes file_body, "<InstdAmt Ccy=\"USD\">102.50</InstdAmt>"
+        assert_includes file_body, "<InstdAmt Ccy=\"EUR\">102.50</InstdAmt>"
         assert_includes file_body, "<Nm>Zahlemann &amp; Söhne GbR</Nm>"
         assert_includes file_body, "<IBAN>DE21500500009876543210</IBAN>"
       end

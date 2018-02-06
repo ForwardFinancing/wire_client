@@ -10,7 +10,7 @@ require 'mocha/mini_test'
 require 'pry'
 
 require 'codeclimate-test-reporter'
-SimpleCov.minimum_coverage 60
+SimpleCov.minimum_coverage 40
 SimpleCov.start do
   add_filter '/test'
 end
@@ -25,64 +25,59 @@ require 'sucker_punch/testing/inline'
 require 'wire_client'
 
 # Configure test settings
+WireClient::HSBC::WireBatch.initiator_name = 'Forward Financing LLC'
+WireClient::HSBC::WireBatch.initiator_wire_routing_number = '021001088'
+WireClient::HSBC::WireBatch.initiator_account_number = '927407619'
+WireClient::HSBC::WireBatch.initiator_identifier = 'FORWARDFINANCINGID'
+WireClient::HSBC::WireBatch.initiator_country_subdivision = 'MA'
+
+WireClient::HSBC.host = 'localhost:3000'
+WireClient::HSBC.username = 'HSBCTester'
+WireClient::HSBC.password = 'HSBCAviatoRulez7'
+WireClient::HSBC.private_ssh_key = "-----BEGIN RSA PRIVATE KEY-----
+MIICWwIBAAKBgQCSNnQuvjgxxXMLSCwOUHiRUuJax2n5RETzQEdlt+qz0v2vmOqY
+KOxPWRTu3qApIOgpoUUJ2QELNWD6b9wIB8Py6Op7Jxp/3kvHpfpsOFxZ5if7MALG
++OFMmjNzjjAzcs833We1Qlmsq/0mOZQPj5CrnxgQIRF1IyD07hyW7fwmZQIDAQAB
+AoGAfgiKZbB6aAy3ekYgE8ax5zL3AyFZ7BA5DyWdZcT/fzqkirTZo4fDCzLSpIUq
+sck31oq5JB/2kl7U1YuOsy1eba6QvWjm3STsIVMZZSRAlveCZXP1St7VO6EpYp1u
+joUS/R6ZvrQMKjfoJSgg8aLencKKI4HoPPfMU/MOxHm4sgECQQD/F7sgIapa4+Fu
+7Rmsg4szoCc5EWRM6HaXZYG/mq8yzKXcIv07rK0m3oRmPl24N8AaFHiWHoXIgDC9
+ALXw1g1hAkEAkruVqIOHR8zfIY9TBznS4leNiFvrggJAJg5LZK8X36SXwxBF6XFj
+V5NFZcAyoWuD0BgjWhlsLDND/HUUz2kThQJAAhgVxyu/lENupFR583qY9/GGoOdN
+pXv7DT8eE46XhZk8e1QmNAk02q7U82nrpwl+IDiuzLyvaHf07nhFBhcbwQJATlAz
+5gadEyMzC9RU+gxQk2ErNtXocjEFT8pdTtVspn5QSVnMFnXgEYOWjGHyI9kgNtZL
+N/FNnKGX7YwHmVN5iQJAP/neHXHkGnAOKubNcKceiN6CsgpMJwljuRAYUCXyqR5F
+RyA0Apd7gmXpC2guaLTvDzpo9d8iR5MKDw6cYUyQsg==
+-----END RSA PRIVATE KEY-----"
+WireClient::HSBC.outgoing_path = '/root/wire_sandbox'
+WireClient::HSBC.outgoing_path = '/root/wire_sandbox/Inbox'
+WireClient::HSBC.file_naming_strategy = lambda do |batch_number|
+  batch_number ||= 1
+  "WIRE#{Date.today.strftime('%m%d%y')}#{batch_number.to_s.rjust(2, '0')}.xml"
+end
+
 WireClient::HSHNordbankHamburg::WireBatch.initiator_name = 'Business from Germany'
-WireClient::HSHNordbankHamburg::WireBatch.initiator_swift_code = 'HSHNDEHHXXX'
+WireClient::HSHNordbankHamburg::WireBatch.initiator_bic = 'HSHNDEHHXXX'
 WireClient::HSHNordbankHamburg::WireBatch.initiator_iban = 'DE87200500001234567890'
-WireClient::HSHNordbankHamburg::WireBatch.initiator_creditor_identifier = 'DE98ZZZ09999999999'
+WireClient::HSHNordbankHamburg::WireBatch.initiator_identifier = 'DE98ZZZ09999999999'
 
 WireClient::HSHNordbankHamburg.host = 'localhost:3000'
 WireClient::HSHNordbankHamburg.username = 'HSHNordbankHamburgTester'
-WireClient::HSHNordbankHamburg.password = 'AviatoRulez7'
+WireClient::HSHNordbankHamburg.password = 'HSHNordbankHamburgAviatoRulez7'
 WireClient::HSHNordbankHamburg.private_ssh_key = "-----BEGIN RSA PRIVATE KEY-----
-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
+MIICWwIBAAKBgH6s2p8X692q+d4kD6HhhagudbBoxiRFOGQT1x36pu7YpozP7fj2
+u1hDPZ7QOPvlB4KHk8P2eUNxt6sSmWXxc8FOk4TmLMAzkzdk/pi6zkIM3nriOsbm
+lGa36y5tIYbW8zmliw2sGB8/YeB635ioBPUVu689NsIjUjpsx0WOW8EtAgMBAAEC
+gYA20oIvNkAbCCLpc7vcOGkK10iR11ZhXh/AmCGSVOcoGVVDPb3k8Is18Kvbbowq
+3/z3DcvylFn4yV9Ox1biGrQYhCCmxcPWCV7aJ53gCgUdlHvdiBoXjEo5Gz70J6NW
+pv7uxZosnt6nd9ACYg/OO4g052pluTKyAv4mLUx4XoejVQJBAO01GnytrHV0qLTH
+kQEp0IUL3Di50G1zJd4jjml+97uFBMqCCgCNvev1p285mA6p3TkBrURXcPjaI4pR
+BhUxEUsCQQCItgDcMPpw/EpgY9+pD3wMna7dIo49QSf2U/bbA6W7X0eiMOElVTJl
+c7sGqhs/0xQu3jonFLP5gKBVzB0hReRnAkAr8oC7xLmE8V4oUCkPXB3j6HSeld6F
+yKWlaFUEOp/PQC/JDRqpS5l6VAL3WmZPoSz5WNQvKzwk/tVC1QwZdQPNAkAJdtge
+ZkGgOscHX0KnmIvU78GgS3kfYnhaxDtNtDXv/8ucvdeIVxqTDW0ALByQ0ZMPH5FV
+DUjcV/xBlEzb9dO3AkEA2JLfE998lka8emp/jwmLpnFc2EjWwGIEDHxVNeSNdd0U
+guSskdloMQfuKT+RQ0VBi6V7vZAmL/OQ/jtxG9HNrA==
 -----END RSA PRIVATE KEY-----"
 WireClient::HSHNordbankHamburg.outgoing_path = '/root/wire_sandbox'
 WireClient::HSHNordbankHamburg.outgoing_path = '/root/wire_sandbox/Inbox'

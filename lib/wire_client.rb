@@ -1,8 +1,11 @@
 require 'ach_client'
 require 'active_support/all'
+require 'active_model'
 require 'savon'
 require 'sucker_punch'
-require 'sepa_king'
+require 'bigdecimal'
+require 'builder'
+require 'iban-tools'
 
 # Require all of the files in lib
 #Dir[Gem::Specification.find_by_name("wire_client").gem_dir + '/lib/**/*.rb'].sort.each do |f|

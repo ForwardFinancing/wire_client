@@ -23,9 +23,9 @@ module WireClient
         )
         file_body = begin
           if @transaction_type == WireClient::TransactionTypes::Credit
-            @sepa_transfer.to_xml('pain.001.001.03').to_s
+            @payment_inititation.to_xml('pain.001.001.03').to_s
           else
-            @sepa_transfer.to_xml('pain.008.001.02').to_s
+            @payment_inititation.to_xml('pain.008.001.02').to_s
           end
         end
         self.class.parent.write_remote_file(
