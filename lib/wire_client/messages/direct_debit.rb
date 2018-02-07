@@ -6,7 +6,7 @@ module WireClient
     self.account_class = CreditorAccount
     self.transaction_class = DirectDebitTransaction
     self.xml_main_tag = 'CstmrDrctDbtInitn'
-    self.known_schemas = [ WireClient::PAIN_008_001_02 ]
+    self.known_schemas = [WireClient::PAIN_008_001_02]
 
     validate do |record|
       if record.transactions.map(&:local_instrument).uniq.size > 1
@@ -14,7 +14,8 @@ module WireClient
       end
     end
 
-  private
+    private
+
     # Find groups of transactions which share the same values of some attributes
     def transaction_group(transaction)
       {
@@ -24,7 +25,7 @@ module WireClient
         batch_booking:    transaction.batch_booking,
         account:          transaction.creditor_account || account,
         service_priority: transaction.service_priority,
-        service_level:    transaction.service_level,
+        service_level:    transaction.service_level
       }
     end
 

@@ -58,7 +58,8 @@ module WireClient
         elsif @transaction_type == WireClient::TransactionTypes::Debit
           initialize_payment_initiation(DirectDebit)
         else
-          raise InvalidWireTransactionTypeError, 'Transactions type cannot be inferred and should be explicitly defined'
+          raise InvalidWireTransactionTypeError,
+                'Transactions type cannot be inferred and should be explicitly defined'
         end
       end
 
@@ -74,7 +75,7 @@ module WireClient
           do_send_batch
         else
           raise InvalidWireTransactionError,
-            "wire transfer is invalid: #{@payment_inititation.errors.full_messages.join("\n")}"
+                "wire transfer is invalid: #{@payment_inititation.error_messages}"
         end
       end
 

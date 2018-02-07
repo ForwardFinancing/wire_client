@@ -18,7 +18,7 @@ module WireClient
 
     def add_transaction(options)
       transaction = transaction_class.new(options)
-      raise ArgumentError.new(transaction.errors.full_messages.join("\n")) unless transaction.valid?
+      raise(ArgumentError, transaction.error_messages) unless transaction.valid?
       @grouped_transactions[transaction_group(transaction)] ||= []
       @grouped_transactions[transaction_group(transaction)] << transaction
     end
@@ -29,8 +29,8 @@ module WireClient
 
     # @return [String] xml
     def to_xml(schema_name=self.class.known_schemas.first)
-      raise RuntimeError.new(errors.full_messages.join("\n")) unless valid?
-      raise RuntimeError.new("Incompatible with schema #{schema_name}!") unless schema_compatible?(schema_name)
+      raise(RuntimeError, errors.full_messages.join("\n")) unless valid?
+      raise(RuntimeError, "Incompatible with schema #{schema_name}!") unless schema_compatible?(schema_name)
 
       builder = Builder::XmlMarkup.new indent: 2
       builder.instruct! :xml
@@ -47,17 +47,17 @@ module WireClient
     end
 
     def schema_compatible?(schema_name)
-      raise ArgumentError.new("Schema #{schema_name} is unknown!") unless self.known_schemas.include?(schema_name)
+      raise(ArgumentError, "Schema #{schema_name} is unknown!") unless self.known_schemas.include?(schema_name)
 
       transactions.all? { |t| t.schema_compatible?(schema_name) }
     end
 
     # Set unique identifer for the message
     def message_identification=(value)
-      raise ArgumentError.new('mesage_identification must be a string!') unless value.is_a?(String)
+      raise(ArgumentError, 'mesage_identification must be a string!') unless value.is_a?(String)
 
       regex = /\A([A-Za-z0-9]|[\+|\?|\/|\-|\:|\(|\)|\.|\,|\'|\ ]){1,35}\z/
-      raise ArgumentError.new("mesage_identification does not match #{regex}!") unless value.match(regex)
+      raise(ArgumentError, "mesage_identification does not match #{regex}!") unless value.match(regex)
 
       @message_identification = value
     end
@@ -81,7 +81,12 @@ module WireClient
       grouped_transactions.keys.collect { |group| payment_information_identification(group) }
     end
 
-  private
+    def error_messages
+      errors.full_messages.join("\n")
+    end
+
+    private
+
     # @return {Hash<Symbol=>String>} xml schema information used in output xml
     def xml_schema(schema_name)
       {
@@ -112,7 +117,7 @@ module WireClient
 
     # Unique and consecutive identifier (used for the <PmntInf> blocks)
     def payment_information_identification(group)
-      "#{message_identification}/#{grouped_transactions.keys.index(group)+1}"
+      "#{message_identification}/#{grouped_transactions.keys.index(group) + 1}"
     end
 
     # Returns a key to determine the group to which the transaction belongs

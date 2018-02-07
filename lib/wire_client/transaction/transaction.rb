@@ -6,22 +6,22 @@ module WireClient
     DEFAULT_REQUESTED_DATE = Date.new(1999, 1, 1).freeze
 
     attr_accessor :name,
-      :iban,
-      :bic,
-      :account_number,
-      :wire_routing_number,
-      :country,
-      :amount,
-      :instruction,
-      :reference,
-      :remittance_information,
-      :requested_date,
-      :batch_booking,
-      :currency
+                  :iban,
+                  :bic,
+                  :account_number,
+                  :wire_routing_number,
+                  :country,
+                  :amount,
+                  :instruction,
+                  :reference,
+                  :remittance_information,
+                  :requested_date,
+                  :batch_booking,
+                  :currency
     convert :name,
-      :instruction,
-      :reference,
-      :remittance_information, to: :text
+            :instruction,
+            :reference,
+            :remittance_information, to: :text
     convert :amount, to: :decimal
 
     validates_length_of :name, within: 1..70
@@ -33,10 +33,10 @@ module WireClient
     validates_presence_of :requested_date
     validates_inclusion_of :batch_booking, :in => [true, false]
     validates_with CurrencyValidator,
-      CountryValidator,
-      BICValidator,
-      IBANValidator,
-      message: "%{value} is invalid"
+                   CountryValidator,
+                   BICValidator,
+                   IBANValidator,
+                   message: "%{value} is invalid"
 
     def initialize(attributes = {})
       attributes.each do |name, value|

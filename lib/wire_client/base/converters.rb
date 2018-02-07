@@ -4,7 +4,7 @@ module WireClient
       include InstanceMethods
 
       method_name = "convert_#{options[:to]}"
-      raise ArgumentError.new("Converter '#{options[:to]}' does not exist!") unless InstanceMethods.method_defined?(method_name)
+      raise(ArgumentError, "Converter '#{options[:to]}' does not exist!") unless InstanceMethods.method_defined?(method_name)
 
       attributes.each do |attribute|
         define_method "#{attribute}=" do |value|
@@ -20,12 +20,12 @@ module WireClient
         value.to_s.
           # Replace some special characters described as "Best practices" in Chapter 6.2 of this document:
           # http://www.europeanpaymentscouncil.eu/index.cfm/knowledge-bank/epc-documents/sepa-requirements-for-an-extended-character-set-unicode-subset-best-practices/
-          tr('€','E').
-          tr('@','(at)').
-          tr('_','-').
+          tr('€', 'E').
+          tr('@', '(at)').
+          tr('_', '-').
 
           # Replace linebreaks by spaces
-          gsub(/\n+/,' ').
+          gsub(/\n+/, ' ').
 
           # Remove all invalid characters
           gsub(/[^a-zA-Z0-9ÄÖÜäöüß&*$%\ \'\:\?\,\-\(\+\.\)\/]/, '').

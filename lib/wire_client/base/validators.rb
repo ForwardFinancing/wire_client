@@ -52,7 +52,7 @@ module WireClient
       country = record.send(options[:country] || :country).to_s
 
       if country == 'US'
-        unless (US_STATES.key?(value) || US_STATES.value?(value))
+        unless US_STATES.key?(value) || US_STATES.value?(value)
           record.errors.add(field_name, :invalid, message: options[:message])
         end
       end

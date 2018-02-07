@@ -6,16 +6,17 @@ module WireClient
     self.account_class = DebtorAccount
     self.transaction_class = CreditTransferTransaction
     self.xml_main_tag = 'CstmrCdtTrfInitn'
-    self.known_schemas = [ WireClient::PAIN_001_001_03 ]
+    self.known_schemas = [WireClient::PAIN_001_001_03]
 
-  private
+    private
+
     # Find groups of transactions which share the same values of some attributes
     def transaction_group(transaction)
       {
         requested_date:   transaction.requested_date,
         batch_booking:    transaction.batch_booking,
         service_priority: transaction.service_priority,
-        service_level:    transaction.service_level,
+        service_level:    transaction.service_level
       }
     end
 

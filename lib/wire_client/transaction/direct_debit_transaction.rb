@@ -4,14 +4,14 @@ module WireClient
   class DirectDebitTransaction < Transaction
 
     attr_accessor :mandate_id,
-      :mandate_date_of_signature,
-      :local_instrument,
-      :sequence_type,
-      :creditor_account,
-      :original_debtor_account,
-      :same_mandate_new_debtor_agent,
-      :service_priority,
-      :service_level
+                  :mandate_date_of_signature,
+                  :local_instrument,
+                  :sequence_type,
+                  :creditor_account,
+                  :original_debtor_account,
+                  :same_mandate_new_debtor_agent,
+                  :service_priority,
+                  :service_level
 
     validates_with MandateIdentifierValidator, field_name: :mandate_id, message: "%{value} is invalid"
     validates_presence_of :mandate_date_of_signature
