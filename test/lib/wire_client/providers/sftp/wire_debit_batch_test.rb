@@ -54,7 +54,7 @@ class SftpProvider
         assert_equal "/root/wire_sandbox/Inbox/WIRE08111601.xml", file_path
         assert_includes file_body, "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<Document xmlns=\"urn:iso:std:iso:20022:tech:xsd:pain.008.001.02\" xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xsi:schemaLocation=\"urn:iso:std:iso:20022:tech:xsd:pain.008.001.02 pain.008.001.02.xsd\">"
         assert_includes file_body, "<CreDtTm>2016-08-11"
-        assert_includes file_body, "<ChrgBr>DEBT</ChrgBr>"
+        assert_includes file_body, "<ChrgBr>CRED</ChrgBr>"
         assert_includes file_body, "<Nm>Business from Germany</Nm>"
         assert_includes file_body, "<IBAN>#{WireClient::HSHNordbankHamburg::WireBatch.initiator_iban}</IBAN>"
         assert_includes file_body, "<InstdAmt Ccy=\"EUR\">102.50</InstdAmt>"
@@ -71,7 +71,7 @@ class SftpProvider
         assert_equal "/root/wire_sandbox/Inbox/WIRE08111601.xml", file_path
         assert_includes file_body, "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<Document xmlns=\"urn:iso:std:iso:20022:tech:xsd:pain.008.001.02\" xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xsi:schemaLocation=\"urn:iso:std:iso:20022:tech:xsd:pain.008.001.02 pain.008.001.02.xsd\">"
         assert_includes file_body, "<CreDtTm>2016-08-11"
-        assert_includes file_body, "<ChrgBr>DEBT</ChrgBr>"
+        assert_includes file_body, "<ChrgBr>CRED</ChrgBr>"
         assert_includes file_body, "<Nm>Business from Germany</Nm>"
         assert_includes file_body, "<IBAN>#{WireClient::HSHNordbankHamburg::WireBatch.initiator_iban}</IBAN>"
         assert_includes file_body, "<InstdAmt Ccy=\"EUR\">102.50</InstdAmt>"

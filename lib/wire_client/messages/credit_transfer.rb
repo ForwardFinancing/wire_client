@@ -10,7 +10,8 @@ module WireClient
 
     private
 
-    # Find groups of transactions which share the same values of some attributes
+    # Find groups of transactions which share the same values for
+    # selected attributes
     def transaction_group(transaction)
       {
         requested_date:   transaction.requested_date,
@@ -20,16 +21,15 @@ module WireClient
       }
     end
 
-    def build_payment_informations(builder)
+    def build_payment_information(builder)
       # Build a PmtInf block for every group of transactions
       grouped_transactions.each do |group, transactions|
-        # All transactions with the same requested_date are placed into the same PmtInf block
+        # All transactions with the same requested_date are placed into the
+        # same PmtInf block
         builder.PmtInf do
           builder.PmtInfId(payment_information_identification(group))
           builder.PmtMtd('TRF')
-          builder.BtchBookg(group[:batch_booking])
           builder.NbOfTxs(transactions.length)
-          builder.CtrlSum('%.2f' % amount_total(transactions))
           builder.PmtTpInf do
             builder.InstrPrty(group[:service_priority])
             builder.SvcLvl do
@@ -37,17 +37,17 @@ module WireClient
             end
           end
           builder.ReqdExctnDt(group[:requested_date].iso8601)
+          builder.BtchBookg(group[:batch_booking])
+          builder.CtrlSum('%.2f' % amount_total(transactions))
           builder.Dbtr do
             builder.Nm(account.name)
             builder.PstlAdr do
-              builder.CtrySubDvsn(account.country_subdivision_name)
+              builder.CtrySubDvsn(account.country_subdivision_abbr)
               builder.Ctry(account.country)
             end
           end
           builder.DbtrAcct do
-            builder.Id do
-              account_id(builder, account)
-            end
+            account_id(builder, account)
           end
           builder.DbtrAgt do
             builder.FinInstnId do
@@ -78,11 +78,15 @@ module WireClient
           builder.EndToEndId(transaction.reference)
         end
         builder.Amt do
-          builder.InstdAmt('%.2f' % transaction.amount, Ccy: transaction.currency)
+          builder.InstdAmt(
+            '%.2f' % transaction.amount,
+            Ccy: transaction.currency
+          )
         end
         builder.CdtrAgt do
           builder.FinInstnId do
             transaction_agent_id(builder, transaction)
+            builder.Nm(transaction.agent_name)
             builder.PstlAdr do
               builder.Ctry(transaction.country)
             end
@@ -95,9 +99,7 @@ module WireClient
           end
         end
         builder.CdtrAcct do
-          builder.Id do
-            transaction_account_id(builder, transaction)
-          end
+          transaction_account_id(builder, transaction)
         end
         if transaction.remittance_information
           builder.RmtInf do

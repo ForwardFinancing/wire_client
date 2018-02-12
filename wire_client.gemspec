@@ -15,7 +15,8 @@ Gem::Specification.new do |spec|
   ]
   spec.licenses = ['MIT']
 
-  spec.summary = %q{ Implementation of ISO 20022 payment initiation (pain) messages and bank providers for wire transfers }
+  spec.summary = %q{ Implementation of ISO 20022 payment initiation
+ (pain) messages and bank providers for wire transfers }
   spec.homepage = 'https://github.com/ForwardFinancing/wire_client'
 
   spec.files = `git ls-files -z`.split(/\x0/)
@@ -30,7 +31,7 @@ Gem::Specification.new do |spec|
   ]
 
   # ach_client library
-  spec.add_dependency 'ach_client', '~> 0'
+  spec.add_dependency 'ach_client'
 
   # Handy ruby behavior from rails
   spec.add_dependency 'activesupport'

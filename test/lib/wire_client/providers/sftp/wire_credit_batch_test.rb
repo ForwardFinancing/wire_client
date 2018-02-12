@@ -20,6 +20,7 @@ class SftpProvider
       sample.add_transaction(
         name: 'Some Merchant',
         wire_routing_number: '111900659',
+        agent_name: 'BANK OF AMERICA',
         account_number: '3019586020',
         country: 'US',
         amount: 102.50
@@ -34,17 +35,17 @@ class SftpProvider
         assert_equal "/root/wire_sandbox/Inbox/WIRE08111601.xml", file_path
         assert_includes file_body, "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<Document xmlns=\"urn:iso:std:iso:20022:tech:xsd:pain.001.001.03\" xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xsi:schemaLocation=\"urn:iso:std:iso:20022:tech:xsd:pain.001.001.03 pain.001.001.03.xsd\">"
         assert_includes file_body, "<CreDtTm>2016-08-11"
-        assert_includes file_body, "<ChrgBr>CRED</ChrgBr>"
+        assert_includes file_body, "<ChrgBr>DEBT</ChrgBr>"
         assert_includes file_body, "<Nm>#{WireClient::HSBC::WireBatch.initiator_name}</Nm>"
         assert_includes file_body, "<Ctry>US</Ctry>"
-        assert_includes file_body, "<CtrySubDvsn>Massachusetts</CtrySubDvsn>"
+        assert_includes file_body, "<CtrySubDvsn>MA</CtrySubDvsn>"
         assert_includes file_body, "<Id>#{WireClient::HSBC::WireBatch.initiator_identifier}</Id>"
         assert_includes file_body, "<Id>#{WireClient::HSBC::WireBatch.initiator_account_number}</Id>"
-        assert_includes file_body, "<Id>#{WireClient::HSBC::WireBatch.initiator_wire_routing_number}</Id>"
+        assert_includes file_body, "<MmbId>#{WireClient::HSBC::WireBatch.initiator_wire_routing_number}</MmbId>"
         assert_includes file_body, "<InstdAmt Ccy=\"USD\">102.50</InstdAmt>"
         assert_includes file_body, "<Nm>Some Merchant</Nm>"
         assert_includes file_body, "<Id>3019586020</Id>"
-        assert_includes file_body, "<Id>111900659</Id>"
+        assert_includes file_body, "<MmbId>111900659</MmbId>"
       end
       sftp_mock.verify
     end
@@ -57,6 +58,7 @@ class SftpProvider
         name: 'John Doe from Ohio',
         wire_routing_number: '021000089',
         account_number: '42349053',
+        agent_name: 'HSBC',
         country: 'US',
         amount: 202.50
       )
@@ -70,17 +72,17 @@ class SftpProvider
         assert_equal "/root/wire_sandbox/Inbox/WIRE08111601.xml", file_path
         assert_includes file_body, "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<Document xmlns=\"urn:iso:std:iso:20022:tech:xsd:pain.001.001.03\" xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xsi:schemaLocation=\"urn:iso:std:iso:20022:tech:xsd:pain.001.001.03 pain.001.001.03.xsd\">"
         assert_includes file_body, "<CreDtTm>2016-08-11"
-        assert_includes file_body, "<ChrgBr>CRED</ChrgBr>"
+        assert_includes file_body, "<ChrgBr>DEBT</ChrgBr>"
         assert_includes file_body, "<Nm>#{WireClient::HSBC::WireBatch.initiator_name}</Nm>"
         assert_includes file_body, "<Ctry>US</Ctry>"
-        assert_includes file_body, "<CtrySubDvsn>Massachusetts</CtrySubDvsn>"
+        assert_includes file_body, "<CtrySubDvsn>MA</CtrySubDvsn>"
         assert_includes file_body, "<Id>#{WireClient::HSBC::WireBatch.initiator_identifier}</Id>"
         assert_includes file_body, "<Id>#{WireClient::HSBC::WireBatch.initiator_account_number}</Id>"
-        assert_includes file_body, "<Id>#{WireClient::HSBC::WireBatch.initiator_wire_routing_number}</Id>"
+        assert_includes file_body, "<MmbId>#{WireClient::HSBC::WireBatch.initiator_wire_routing_number}</MmbId>"
         assert_includes file_body, "<InstdAmt Ccy=\"USD\">202.50</InstdAmt>"
         assert_includes file_body, "<Nm>John Doe from Ohio</Nm>"
         assert_includes file_body, "<Id>42349053</Id>"
-        assert_includes file_body, "<Id>021000089</Id>"
+        assert_includes file_body, "<MmbId>021000089</MmbId>"
       end
       sftp_mock.verify
     end

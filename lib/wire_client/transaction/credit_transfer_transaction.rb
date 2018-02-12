@@ -11,13 +11,8 @@ module WireClient
 
     def initialize(attributes = {})
       super
-      self.service_priority ||= 'NORM'
-      self.service_level ||= 'URGP'
-    end
-
-    def schema_compatible?(_schema_name)
-      # Could be used to implement schema_compatibility check
-      true
+      @service_priority ||= 'NORM'
+      @service_level ||= 'URGP'
     end
   end
 end

@@ -10,13 +10,17 @@ module WireClient
 
     validate do |record|
       if record.transactions.map(&:local_instrument).uniq.size > 1
-        errors.add(:base, 'CORE, COR1 AND B2B must not be mixed in one message!')
+        errors.add(
+          :base,
+          'CORE, COR1 and B2B must not be mixed in one message!'
+        )
       end
     end
 
     private
 
-    # Find groups of transactions which share the same values of some attributes
+    # Find groups of transactions which share the same values for
+    # selected attributes
     def transaction_group(transaction)
       {
         requested_date:   transaction.requested_date,
@@ -29,7 +33,7 @@ module WireClient
       }
     end
 
-    def build_payment_informations(builder)
+    def build_payment_information(builder)
       # Build a PmtInf block for every group of transactions
       grouped_transactions.each do |group, transactions|
         builder.PmtInf do
@@ -57,9 +61,7 @@ module WireClient
             end
           end
           builder.CdtrAcct do
-            builder.Id do
-              account_id(builder, group[:account])
-            end
+            account_id(builder, group[:account])
           end
           builder.CdtrAgt do
             builder.FinInstnId do
@@ -79,7 +81,8 @@ module WireClient
     end
 
     def build_amendment_informations(builder, transaction)
-      return unless transaction.original_debtor_account || transaction.same_mandate_new_debtor_agent
+      return unless transaction.original_debtor_account ||
+                    transaction.same_mandate_new_debtor_agent
       builder.AmdmntInd(true)
       builder.AmdmntInfDtls do
         if transaction.original_debtor_account
@@ -108,7 +111,10 @@ module WireClient
           end
           builder.EndToEndId(transaction.reference)
         end
-        builder.InstdAmt('%.2f' % transaction.amount, Ccy: transaction.currency)
+        builder.InstdAmt(
+          '%.2f' % transaction.amount,
+          Ccy: transaction.currency
+        )
         builder.DrctDbtTx do
           builder.MndtRltdInf do
             builder.MndtId(transaction.mandate_id)
@@ -119,6 +125,7 @@ module WireClient
         builder.DbtrAgt do
           builder.FinInstnId do
             transaction_agent_id(builder, transaction)
+            builder.Nm(transaction.agent_name)
             builder.PstlAdr do
               builder.Ctry(transaction.country)
             end
@@ -128,9 +135,7 @@ module WireClient
           builder.Nm(transaction.name)
         end
         builder.DbtrAcct do
-          builder.Id do
-            transaction_account_id(builder, transaction)
-          end
+          transaction_account_id(builder, transaction)
         end
         if transaction.remittance_information
           builder.RmtInf do

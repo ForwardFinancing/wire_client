@@ -2,7 +2,7 @@ module WireClient
   # Namespace for all things Sftp
   class Sftp
     # NACHA representation of an AchBatch
-    class WireBatch < Abstract::WireBatch
+    class WireBatch < WireClient::Abstract::WireBatch
 
       def initialize(transaction_type:, batch_number: nil)
         super(transaction_type: transaction_type)

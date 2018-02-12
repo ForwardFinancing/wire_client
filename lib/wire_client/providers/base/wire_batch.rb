@@ -2,16 +2,20 @@ module WireClient
   # Abstract Wire transfer provider, which all other provider's inherit from
   class Abstract
 
-    # Base class for sending batched Wire transfer transactions to various providers
+    # Base class for sending batched Wire transfer transactions to various
+    # providers
     class WireBatch
-      # An initiator is an entity that initiates the transfer process; it can be a debtor
-      # or a creditor. An receptor, on the other hand, is someone that will fulfilling
-      # the transfer, whether receiving or withdrawing the described amount.
+      # An initiator is an entity that initiates the transfer process; it can
+      # be a debtor or a creditor. An receptor, on the other hand, is someone
+      # that will fulfilling the transfer, whether receiving or withdrawing the
+      # described amount.
 
-      # @return [String] Debtor's or creditor's name for the one initianting the transfer
+      # @return [String] Debtor's or creditor's name for the one initianting
+      # the transfer
       class_attribute :initiator_name
 
-      # @return [String] Debtor's or creditor's IBAN (International Bank Account Number) ID
+      # @return [String] Debtor's or creditor's IBAN (International Bank
+      # Account Number) ID
       class_attribute :initiator_iban
 
       # @return [String] Debtor's or creditor's bank SWIFT Code / BIC
@@ -26,10 +30,12 @@ module WireClient
       # @return [String] The initiating party's Identifier
       class_attribute :initiator_identifier
 
-      # @return [String] The initiating party's country (2 character country code; default: US)
+      # @return [String] The initiating party's country (2 character country
+      # code; default: US)
       class_attribute :initiator_country
 
-      # @return [String] The initiating party's country subdivision (name or 2 character code; default: MA)
+      # @return [String] The initiating party's country subdivision (name or
+      # 2 character code; default: MA)
       class_attribute :initiator_country_subdivision
 
       ##
@@ -44,7 +50,8 @@ module WireClient
       attr_reader(*arguments)
 
       ##
-      # @param transaction_type [WireClient::TransactionTypes::TransactionType] debit or credit
+      # @param transaction_type [WireClient::TransactionTypes::TransactionType]
+      # debit or credit
       def initialize(*arguments)
         args = arguments.extract_options!
         self.class.arguments.each do |param|
@@ -59,7 +66,7 @@ module WireClient
           initialize_payment_initiation(DirectDebit)
         else
           raise InvalidWireTransactionTypeError,
-                'Transactions type cannot be inferred and should be explicitly defined'
+                'Transaction type should be explicitly defined'
         end
       end
 
@@ -75,7 +82,7 @@ module WireClient
           do_send_batch
         else
           raise InvalidWireTransactionError,
-                "wire transfer is invalid: #{@payment_inititation.error_messages}"
+                "invalid wire transfer: #{@payment_inititation.error_messages}"
         end
       end
 
