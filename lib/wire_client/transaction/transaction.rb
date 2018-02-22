@@ -19,7 +19,9 @@ module WireClient
                   :remittance_information,
                   :requested_date,
                   :batch_booking,
-                  :currency
+                  :currency,
+                  :service_priority,
+                  :service_level
     convert :name,
             :instruction,
             :reference,

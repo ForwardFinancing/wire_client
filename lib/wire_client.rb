@@ -18,6 +18,8 @@ end
 module WireClient
   include AchClient
 
+  Time.zone = 'Eastern Time (US & Canada)'
+
   # Enables consumer to interact with new SFTP providers without adding them
   # to the codebase.Lets say the consumer wants to integrate with Citibank.
   # They would invoke WireClient::Citibank, which would be undefined. This

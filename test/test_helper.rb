@@ -6,11 +6,33 @@ require 'minitest/reporters'
 Minitest.backtrace_filter = Minitest::BacktraceFilter.new
 Minitest::Reporters.use!
 
+module MiniTest::Assertions
+  def assert_valid_values(klass, values:, attributes:)
+    attributes.each do |attribute|
+      values.each do |value|
+        subject = klass.new attribute => value
+        subject.validate
+        assert_equal subject.errors[attribute].size, 0
+      end
+    end
+  end
+
+  def refute_invalid_values(klass, values:, attributes:)
+    attributes.each do |attribute|
+      values.each do |value|
+        subject = klass.new attribute => value
+        subject.validate
+        assert subject.errors.size > 0
+      end
+    end
+  end
+end
+
 require 'mocha/mini_test'
 require 'pry'
 
 require 'codeclimate-test-reporter'
-SimpleCov.minimum_coverage 40
+SimpleCov.minimum_coverage 42
 SimpleCov.start do
   add_filter '/test'
 end

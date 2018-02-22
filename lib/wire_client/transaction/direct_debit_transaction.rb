@@ -30,7 +30,7 @@ module WireClient
       end
 
       if t.mandate_date_of_signature.is_a?(Date)
-        if t.mandate_date_of_signature > Date.today
+        if t.mandate_date_of_signature > Time.zone.now.to_date
           errors.add(:mandate_date_of_signature, 'is in the future')
         end
       else
