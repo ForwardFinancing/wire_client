@@ -18,4 +18,8 @@ describe WireClient::CreditorAccount do
     )
     assert subject.valid?
   end
+
+  it 'should have default for charge_bearer' do
+    assert_equal WireClient::CreditorAccount.new.charge_bearer, 'CRED'
+  end
 end

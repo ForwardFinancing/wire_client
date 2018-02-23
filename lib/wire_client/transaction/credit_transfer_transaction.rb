@@ -7,7 +7,9 @@ module WireClient
     validates_inclusion_of :service_priority, :in => SERVICE_PRIORITY_TYPES
     validates_inclusion_of :service_level, :in => SERVICE_LEVEL_TYPES
 
-    validate { |t| t.validate_requested_date_after(Date.today) }
+    validate do |t|
+      t.validate_requested_date_after(Time.zone.now.to_date.next)
+    end
 
     def initialize(attributes = {})
       super

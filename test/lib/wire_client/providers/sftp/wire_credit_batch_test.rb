@@ -23,6 +23,7 @@ class SftpProvider
         agent_name: 'BANK OF AMERICA',
         account_number: '3019586020',
         country: 'US',
+        instruction: '1234/ABC',
         amount: 102.50
       )
       sample
@@ -60,6 +61,7 @@ class SftpProvider
         account_number: '42349053',
         agent_name: 'HSBC',
         country: 'US',
+        remittance_information: 'Any information about the transaction',
         amount: 202.50
       )
       sample

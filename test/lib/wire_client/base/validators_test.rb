@@ -30,7 +30,7 @@ describe WireClient::IBANValidator do
     )
   end
 
-  it "should customize error message" do
+  it 'should customize error message' do
     subject = Validatable.new(:iban => 'xxx')
     subject.validate
     assert_equal subject.errors[:iban].first, 'xxx seems wrong'
@@ -61,7 +61,7 @@ describe WireClient::BICValidator do
     )
   end
 
-  it "should customize error message" do
+  it 'should customize error message' do
     subject = Validatable.new(:bic => 'xxx')
     subject.validate
     assert_equal subject.errors[:bic].first, 'xxx seems wrong'
@@ -98,10 +98,78 @@ describe WireClient::CreditorIdentifierValidator do
     )
   end
 
-  it "should customize error message" do
+  it 'should customize error message' do
     subject = Validatable.new(:identifier => 'x' * 36)
     subject.validate
     assert_equal subject.errors[:identifier].first, "#{'x' * 36} seems wrong"
+  end
+end
+
+describe WireClient::CountryValidator do
+  class Validatable
+    include ActiveModel::Model
+    attr_accessor :country, :country_field
+    validates_with WireClient::CountryValidator,
+                   message: "%{value} seems wrong"
+    validates_with WireClient::CountryValidator, field_name: :country_field
+  end
+
+  it 'should accept valid country' do
+    assert_valid_values(
+      Validatable,
+      values: ['US', 'UK', 'BR', 'FR'],
+      attributes: [:country, :country_field]
+    )
+  end
+
+  it 'should not accept an invalid country' do
+    refute_invalid_values(
+      Validatable,
+      values: ['USD', 'invalid', 'etc', 'U'],
+      attributes: [:country, :country_field]
+    )
+  end
+end
+
+describe WireClient::CountrySubdivisionValidator do
+  class Validatable
+    include ActiveModel::Model
+    attr_accessor :country, :country_subdivision, :country_subdivision_field
+    validates_with WireClient::CountrySubdivisionValidator,
+                   message: "%{value} seems wrong"
+    validates_with WireClient::CountrySubdivisionValidator,
+                   field_name: :country_subdivision_field
+
+    def initialize(options={})
+      super(options)
+      @country = 'US'
+    end
+  end
+
+  it 'should initialize model with proper country value: the US' do
+    assert_equal Validatable.new.country, 'US'
+  end
+
+  it 'should accept valid country' do
+    assert_valid_values(
+      Validatable,
+      values: ['MA', 'CA', 'Massachusetts', 'NY'],
+      attributes: [:country_subdivision, :country_subdivision_field]
+    )
+  end
+
+  it 'should not accept an invalid country' do
+    refute_invalid_values(
+      Validatable,
+      values: ['USD', 'invalid', 'etc', 'US', 'GO', 'SP'],
+      attributes: [:country_subdivision, :country_subdivision_field]
+    )
+  end
+
+  it 'should customize error message' do
+    subject = Validatable.new(:country_subdivision => 'ABC')
+    subject.validate
+    assert_equal subject.errors[:country_subdivision].first, 'ABC seems wrong'
   end
 end
 
@@ -130,7 +198,7 @@ describe WireClient::MandateIdentifierValidator do
     )
   end
 
-  it "should customize error message" do
+  it 'should customize error message' do
     subject = Validatable.new(:mandate_id => 'ABC 123')
     subject.validate
     assert_equal subject.errors[:mandate_id].first, 'ABC 123 seems wrong'

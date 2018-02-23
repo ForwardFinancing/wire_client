@@ -8,8 +8,6 @@ require 'builder'
 require 'iban-tools'
 
 # Require all of the files in lib
-# Dir[Gem::Specification.find_by_name(
-#   "wire_client").gem_dir + '/lib/**/*.rb'].sort.each do |f|
 Dir[File.expand_path('..', __FILE__) + '/**/*.rb'].sort.each do |f|
   require(f.split('/lib/').last.split('.rb').first)
 end
@@ -18,10 +16,8 @@ end
 module WireClient
   include AchClient
 
-  Time.zone = 'Eastern Time (US & Canada)'
-
   # Enables consumer to interact with new SFTP providers without adding them
-  # to the codebase.Lets say the consumer wants to integrate with Citibank.
+  # to the codebase. Let's say the consumer wants to integrate with Citibank.
   # They would invoke WireClient::Citibank, which would be undefined. This
   # const_missing would be called, and the Citibank module would be dynamically
   # defined, with all the necessary SFTP concerns included and ready for use.

@@ -36,7 +36,7 @@ module WireClient
 
       @currency ||= 'USD'
       @country ||= 'US'
-      @country_subdivision ||= 'MA'
+      @country_subdivision ||= 'MA' if self.country == 'US'
       @schema_code ||= 'CUST'
       @clear_system_code ||= 'USABA'
       custom_defaults if self.respond_to? :custom_defaults

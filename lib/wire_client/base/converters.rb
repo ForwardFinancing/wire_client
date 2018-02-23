@@ -17,8 +17,7 @@ module WireClient
 
     module InstanceMethods
       def convert_text(value)
-        return unless value
-
+        return unless value.present?
         value.to_s.
           # Replace some special characters described as "Best practices"
           # in Chapter 6.2 of this document:
@@ -38,15 +37,9 @@ module WireClient
       end
 
       def convert_decimal(value)
-        return unless value
-        value = begin
-          BigDecimal(value.to_s)
-        rescue ArgumentError
-        end
-
-        if value&.finite? && value.positive?
-          value.round(2)
-        end
+        return unless value.present?
+        value = BigDecimal(value.to_f&.to_s)
+        value.round(2) if value&.finite? && value.positive?
       end
     end
   end

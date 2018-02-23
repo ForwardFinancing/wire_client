@@ -18,4 +18,8 @@ describe WireClient::DebtorAccount do
     )
     assert subject.valid?
   end
+
+  it 'should have default for charge_bearer' do
+    assert_equal WireClient::DebtorAccount.new.charge_bearer, 'DEBT'
+  end
 end

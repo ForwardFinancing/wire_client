@@ -24,5 +24,15 @@ describe WireClient::CreditTransferTransaction do
       )
       assert subject.valid?
     end
+
+    it 'should have default for service_priority' do
+      assert_equal WireClient::CreditTransferTransaction.new.service_priority,
+                   'NORM'
+    end
+
+    it 'should have default for sequence_type' do
+      assert_equal WireClient::CreditTransferTransaction.new.service_level,
+                   'URGP'
+    end
   end
 end

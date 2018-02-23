@@ -3,7 +3,7 @@ module WireClient
     include ActiveModel::Validations
     extend Converter
 
-    DEFAULT_REQUESTED_DATE = Date.new(1999, 1, 1).freeze
+    DEFAULT_REQUESTED_DATE = Time.zone.now.to_date.freeze
 
     attr_accessor :name,
                   :iban,

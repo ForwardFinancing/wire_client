@@ -24,7 +24,7 @@ describe WireClient::Transaction do
 
     it 'should have default for requested_date' do
       assert_equal WireClient::Transaction.new.requested_date,
-                   Date.new(1999, 1, 1)
+                   Date.new(2016, 8, 11)
     end
 
     it 'should have default for batch_booking' do
@@ -37,6 +37,33 @@ describe WireClient::Transaction do
 
     it 'should have default for service_level' do
       assert_equal WireClient::Transaction.new.service_level, 'URGP'
+    end
+  end
+
+  describe :error_messages do
+    it 'should include all error messages' do
+      subject = WireClient::Transaction.new
+      refute subject.valid?
+      assert_includes subject.error_messages,
+                      'Name is too short (minimum is 1 character)'
+      assert_includes subject.error_messages,
+                      'Amount is not a number'
+    end
+  end
+
+  describe :requested_date do
+    it 'should be greater than today by default' do
+      subject = WireClient::DirectDebitTransaction.new(
+        requested_date: Date.yesterday
+      )
+      refute subject.valid?
+      assert_equal subject.errors[:requested_date].size, 1
+
+      subject = WireClient::CreditTransferTransaction.new(
+        requested_date: Date.yesterday
+      )
+      refute subject.valid?
+      assert_equal subject.errors[:requested_date].size, 1
     end
   end
 

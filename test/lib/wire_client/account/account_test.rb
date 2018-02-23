@@ -17,6 +17,38 @@ describe WireClient::Account do
     end
   end
 
+  describe :country_subdivision_abbr do
+    it 'should be nil when the country is not the US' do
+      subject = WireClient::Account.new country: 'AR'
+      assert_nil subject.country_subdivision_abbr
+    end
+
+    it 'should provide the correct abbreviation for US states' do
+      subject = WireClient::Account.new country: 'US',
+                                        country_subdivision: 'MA'
+      assert_equal subject.country_subdivision_abbr, 'MA'
+      subject = WireClient::Account.new country: 'US',
+                                        country_subdivision: 'Massachusetts'
+      assert_equal subject.country_subdivision_abbr, 'MA'
+    end
+  end
+
+  describe :country_subdivision_name do
+    it 'should be nil when the country is not the US' do
+      subject = WireClient::Account.new country: 'AR'
+      assert_nil subject.country_subdivision_name
+    end
+
+    it 'should provide the correct abbreviation for US states' do
+      subject = WireClient::Account.new country: 'US',
+                                        country_subdivision: 'MA'
+      assert_equal subject.country_subdivision_name, 'Massachusetts'
+      subject = WireClient::Account.new country: 'US',
+                                        country_subdivision: 'Massachusetts'
+      assert_equal subject.country_subdivision_name, 'Massachusetts'
+    end
+  end
+
   describe :name do
     it 'should accept valid value' do
       assert_valid_values(

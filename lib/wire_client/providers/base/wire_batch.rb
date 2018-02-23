@@ -1,13 +1,13 @@
 module WireClient
-  # Abstract Wire transfer provider, which all other provider's inherit from
+  # Abstract Wire transfer provider, which all other providers inherit from
   class Abstract
 
     # Base class for sending batched Wire transfer transactions to various
     # providers
     class WireBatch
       # An initiator is an entity that initiates the transfer process; it can
-      # be a debtor or a creditor. An receptor, on the other hand, is someone
-      # that will fulfilling the transfer, whether receiving or withdrawing the
+      # be a debtor or a creditor. A receptor, on the other hand, is someone
+      # who will fulfill the transfer, whether receiving or withdrawing the
       # described amount.
 
       # @return [String] Debtor's or creditor's name for the one initianting
@@ -71,18 +71,18 @@ module WireClient
       end
 
       def add_transaction(transaction_options)
-        @payment_inititation.add_transaction(transaction_options)
+        @payment_initiation.add_transaction(transaction_options)
       end
 
       ##
       # Sends the batch to the provider. Useful to check transaction status
       #   before sending any data (consistency, validation, etc.)
       def send_batch
-        if @payment_inititation.valid?
+        if @payment_initiation.valid?
           do_send_batch
         else
           raise InvalidWireTransactionError,
-                "invalid wire transfer: #{@payment_inititation.error_messages}"
+                "invalid wire transfer: #{@payment_initiation.error_messages}"
         end
       end
 
@@ -96,7 +96,7 @@ module WireClient
 
       def initialize_payment_initiation(klass)
         if self.class.initiator_iban
-          @payment_inititation = klass.new(
+          @payment_initiation = klass.new(
             name: self.class.initiator_name,
             bic: self.class.initiator_bic,
             iban: self.class.initiator_iban,
@@ -105,7 +105,7 @@ module WireClient
             country_subdivision: self.class.initiator_country_subdivision
           )
         else
-          @payment_inititation = klass.new(
+          @payment_initiation = klass.new(
             name: self.class.initiator_name,
             wire_routing_number: self.class.initiator_wire_routing_number,
             account_number: self.class.initiator_account_number,

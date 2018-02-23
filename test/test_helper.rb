@@ -1,10 +1,31 @@
 $LOAD_PATH.unshift File.expand_path('../../lib', __FILE__)
 
+require 'active_support/all'
+Time.zone = 'Eastern Time (US & Canada)'
+
+require 'codeclimate-test-reporter'
+SimpleCov.minimum_coverage 100
+SimpleCov.start do
+  add_filter '/test'
+end
+
 require 'minitest/autorun'
 require 'minitest/mock'
 require 'minitest/reporters'
 Minitest.backtrace_filter = Minitest::BacktraceFilter.new
 Minitest::Reporters.use!
+
+require 'mocha/mini_test'
+require 'pry'
+
+# Freeze time so we don't have to worry about Time.now relativity
+require 'timecop'
+Timecop.freeze(DateTime.parse('2016-08-11T10:13:05-04:00+00:00'))
+
+# Everything happens synchronously
+require 'sucker_punch/testing/inline'
+
+require 'wire_client'
 
 module MiniTest::Assertions
   def assert_valid_values(klass, values:, attributes:)
@@ -27,24 +48,6 @@ module MiniTest::Assertions
     end
   end
 end
-
-require 'mocha/mini_test'
-require 'pry'
-
-require 'codeclimate-test-reporter'
-SimpleCov.minimum_coverage 42
-SimpleCov.start do
-  add_filter '/test'
-end
-
-# Freeze time so we don't have to worry about Time.now relativity
-require 'timecop'
-Timecop.freeze(DateTime.parse('2016-08-11T10:13:05-04:00+00:00'))
-
-# Everything happens synchronously
-require 'sucker_punch/testing/inline'
-
-require 'wire_client'
 
 # Configure test settings
 WireClient::HSBC::WireBatch.initiator_name = 'Forward Financing LLC'

@@ -1,15 +1,55 @@
 require 'test_helper'
 
-class DummyTransaction < WireClient::Transaction
-  def valid?; true end
-end
-
-class DummyMessage < WireClient::Message
-  self.account_class = WireClient::Account
-  self.transaction_class = DummyTransaction
-end
-
 describe WireClient::Message do
+  class DummyTransaction < WireClient::Transaction
+    def valid?; true end
+  end
+
+  class DummyMessage < WireClient::Message
+    self.account_class = WireClient::Account
+    self.transaction_class = DummyTransaction
+  end
+
+  describe :add_transaction do
+    class InvalidMessage < WireClient::Message
+      self.account_class = WireClient::Account
+      self.transaction_class = WireClient::Transaction
+    end
+
+    it 'should raise an error when transaction is invalid' do
+      message = InvalidMessage.new
+      assert_raises(ArgumentError) do
+        message.add_transaction amount: 1.1
+      end
+    end
+  end
+
+  describe :to_xml do
+    class SchemaIncompatibleTransaction < WireClient::Transaction
+      def schema_compatible?(_name); false end
+
+      def valid?; true end
+    end
+
+    class SchemaIncompatibleMessage < WireClient::Message
+      self.account_class = WireClient::Account
+      self.transaction_class = SchemaIncompatibleTransaction
+      self.known_schemas = [
+        'schema_supported_by_message_but_not_for_transactions'
+      ]
+
+      def valid?; true end
+    end
+
+    it 'should raise an error if transaction is not compatible with schema' do
+      message = SchemaIncompatibleMessage.new
+      message.add_transaction({})
+      assert_raises(RuntimeError) do
+        message.to_xml('schema_supported_by_message_but_not_for_transactions')
+      end
+    end
+  end
+
   describe :amount_total do
     subject do
       message = DummyMessage.new

@@ -3,6 +3,20 @@ require 'test_helper'
 describe WireClient::Converter do
   include WireClient::Converter::InstanceMethods
 
+  describe 'undefined converter' do
+    it 'should not convert to unknown converters' do
+      assert_raises(ArgumentError) do
+        class Inconvertible
+          extend WireClient::Converter
+
+          attr_accessor :mock
+
+          convert :mock, to: :unknown
+        end
+      end
+    end
+  end
+
   describe :convert_text do
     it 'should convert special chars' do
       assert_equal convert_text('10€'), '10E'
