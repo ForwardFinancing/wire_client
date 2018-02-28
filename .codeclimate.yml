@@ -1,18 +1,35 @@
----
+prepare:
+  fetch:
+    - url: "https://raw.githubusercontent.com/ForwardFinancing/code_styles/master/rubocop.yml"
+      path: ".rubocop.yml"
+
+    - url: "https://raw.githubusercontent.com/ForwardFinancing/code_styles/master/stylelintrc"
+      path: ".stylelintrc"
 engines:
-  duplication:
-    enabled: true
-    config:
-      languages:
-      - ruby
+  bundler-audit:
+    enabled: false # somehow it is failing in CodeClimate's builds
   fixme:
     enabled: true
   rubocop:
     enabled: true
+    file: ".rubocop.yml"
+    channel: rubocop-0-48
+    checks:
+      Rubocop/Style/RegexpLiteral:
+        enabled: false
+  stylelint:
+    enabled: true
+  duplication:
+    enabled: true
+    config:
+      languages:
+        ruby:
+          mass_threshold: 20
 ratings:
   paths:
-  - Gemfile.lock
-  - "**.rb"
+    - "Gemfile.lock"
+    - "**.rb"
 exclude_paths:
-- bin/
-- test/
+- "bin"
+- "schemas"
+- "test"
