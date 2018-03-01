@@ -23,7 +23,7 @@ module WireClient
     validates_inclusion_of :service_level, :in => SERVICE_LEVEL_TYPES
 
     validate do |t|
-      t.validate_requested_date_after(Time.zone.now.to_date.next)
+      t.validate_requested_date_after(WireClient.today.next)
     end
 
     validate do |t|
@@ -32,7 +32,7 @@ module WireClient
       end
 
       if t.mandate_date_of_signature.is_a?(Date)
-        if t.mandate_date_of_signature > Time.zone.now.to_date
+        if t.mandate_date_of_signature > WireClient.today
           errors.add(:mandate_date_of_signature, 'is in the future')
         end
       else
