@@ -3,8 +3,6 @@ module WireClient
     include ActiveModel::Validations
     extend Converter
 
-    DEFAULT_REQUESTED_DATE = Time.zone.now.to_date.freeze
-
     attr_accessor :name,
                   :iban,
                   :bic,
@@ -53,7 +51,7 @@ module WireClient
       @country ||= 'US'
       @clear_system_code ||= 'USABA'
       @agent_name ||= 'NOTPROVIDED'
-      @requested_date ||= DEFAULT_REQUESTED_DATE
+      @requested_date ||= default_requested_date
       @reference ||= 'NOTPROVIDED'
       @batch_booking = true if @batch_booking.nil?
       @service_priority ||= 'NORM'
@@ -72,10 +70,14 @@ module WireClient
 
     protected
 
+    def default_requested_date
+      WireClient.today.freeze
+    end
+
     def validate_requested_date_after(min_requested_date)
       return unless requested_date.is_a?(Date)
 
-      if requested_date != DEFAULT_REQUESTED_DATE &&
+      if requested_date != default_requested_date &&
          requested_date < min_requested_date
         errors.add(
           :requested_date,

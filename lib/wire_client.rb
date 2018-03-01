@@ -33,4 +33,12 @@ module WireClient
       end
     )
   end
+
+  def self.today
+    if Time.zone.present?
+      Time.zone.now.to_date
+    else
+      Date.today
+    end
+  end
 end

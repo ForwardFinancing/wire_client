@@ -8,7 +8,7 @@ module WireClient
     validates_inclusion_of :service_level, :in => SERVICE_LEVEL_TYPES
 
     validate do |t|
-      t.validate_requested_date_after(Time.zone.now.to_date.next)
+      t.validate_requested_date_after(WireClient.today.next)
     end
 
     def initialize(attributes = {})
