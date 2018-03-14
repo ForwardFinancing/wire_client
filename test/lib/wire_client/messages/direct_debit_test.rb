@@ -2,7 +2,7 @@ require 'test_helper'
 
 describe WireClient::DirectDebit do
   let :message_id_regex do
-    /WIRE\/[0-9a-z_]{10}/
+    /WIRE[0-9a-z_]{10}/
   end
 
   let :direct_debit_message do
@@ -67,8 +67,8 @@ describe WireClient::DirectDebit do
       subject.add_transaction(transaction_two.merge(
         reference: 'EXAMPLE REFERENCE 3'))
       assert_equal subject.batches.size, 2
-      assert_match /#{message_id_regex}\/[0-9]+/, subject.batches[0]
-      assert_match /#{message_id_regex}\/[0-9]+/, subject.batches[1]
+      assert_match /#{message_id_regex}[0-9]+/, subject.batches[0]
+      assert_match /#{message_id_regex}[0-9]+/, subject.batches[1]
     end
   end
 
@@ -77,7 +77,7 @@ describe WireClient::DirectDebit do
       subject = direct_debit_message
       subject.add_transaction(
         transaction_one.merge(reference: 'EXAMPLE REFERENCE'))
-      assert_match /#{message_id_regex}\/1/,
+      assert_match /#{message_id_regex}1/,
                    subject.batch_id('EXAMPLE REFERENCE')
     end
 
@@ -91,9 +91,9 @@ describe WireClient::DirectDebit do
           requested_date: Date.today.next.next))
       subject.add_transaction(
         transaction_two.merge(reference: 'EXAMPLE REFERENCE 3'))
-      assert_match /#{message_id_regex}\/1/,
+      assert_match /#{message_id_regex}1/,
                    subject.batch_id('EXAMPLE REFERENCE 1')
-      assert_match /#{message_id_regex}\/2/,
+      assert_match /#{message_id_regex}2/,
                    subject.batch_id('EXAMPLE REFERENCE 2')
     end
   end
