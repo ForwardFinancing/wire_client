@@ -86,7 +86,7 @@ describe WireClient::Message do
 
     describe 'getter' do
       it 'should return prefixed random hex string' do
-        assert_match /WIRE\/([a-f0-9]{2}){5}/, subject.message_identification
+        assert_match /WIRE([a-f0-9]{2}){5}/, subject.message_identification
       end
     end
 

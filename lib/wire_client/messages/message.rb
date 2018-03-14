@@ -79,7 +79,7 @@ module WireClient
 
     # Get unique identifer for the message (with fallback to a random string)
     def message_identification
-      @message_identification ||= "WIRE/#{SecureRandom.hex(5)}"
+      @message_identification ||= "WIRE#{SecureRandom.hex(5)}"
     end
 
     # Returns the id of the batch to which the given transaction belongs
@@ -143,7 +143,7 @@ module WireClient
 
     # Unique and consecutive identifier (used for the <PmntInf> blocks)
     def payment_information_identification(group)
-      "#{message_identification}/#{grouped_transactions.keys.index(group) + 1}"
+      "#{message_identification}#{grouped_transactions.keys.index(group) + 1}"
     end
 
     # Returns a key to determine the group to which the transaction belongs
