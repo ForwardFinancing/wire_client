@@ -8,6 +8,14 @@ describe WireClient::Account do
       end
     end
 
+    it 'should have default for country' do
+      assert_equal WireClient::Account.new.country, 'US'
+    end
+
+    it 'should have default for country_subdivision' do
+      assert_equal WireClient::Transaction.new.country_subdivision, 'MA'
+    end
+
     it 'should require name and identifier' do
       subject = WireClient::Account.new
       refute subject.valid?
