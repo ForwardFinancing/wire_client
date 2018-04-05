@@ -1,9 +1,11 @@
 require_relative '../base/converters'
 require_relative '../base/validators'
+require_relative '../base/account_transaction_helpers'
 
 module WireClient
   class Account
     include ActiveModel::Validations
+    include AccountTransactionHelpers
     extend Converter
 
     attr_accessor :name,
@@ -12,21 +14,25 @@ module WireClient
                   :account_number,
                   :wire_routing_number,
                   :clear_system_code,
+                  :postal_code,
+                  :address_line,
+                  :city,
+                  :country_subdivision,
+                  :country,
+                  :currency,
                   :schema_code,
                   :identifier,
-                  :country,
-                  :country_subdivision,
-                  :charge_bearer,
-                  :currency
+                  :charge_bearer
 
     convert :name, to: :text
+    validates_length_of :currency, is: 3
     validates_length_of :name, within: 1..70
     validates_with CurrencyValidator,
                    CountryValidator,
                    CountrySubdivisionValidator,
-                   CreditorIdentifierValidator,
                    BICValidator,
                    IBANValidator,
+                   CreditorIdentifierValidator,
                    message: "%{value} is invalid"
 
     def initialize(attributes = {})
@@ -35,25 +41,14 @@ module WireClient
       end
 
       @currency ||= 'USD'
+      @postal_code ||= 'NA'
+      @address_line ||= 'NA'
+      @city ||= 'NA'
       @country ||= 'US'
       @country_subdivision ||= 'MA' if self.country == 'US'
       @schema_code ||= 'CUST'
       @clear_system_code ||= 'USABA'
       custom_defaults if self.respond_to? :custom_defaults
-    end
-
-    def country_subdivision_abbr
-      if @country == 'US' && !@country_subdivision.match(/\A[A-Z]{2,2}\z/)
-        return US_STATES[@country_subdivision]
-      end
-      @country_subdivision
-    end
-
-    def country_subdivision_name
-      if @country == 'US' && @country_subdivision.match(/\A[A-Z]{2,2}\z/)
-        return US_STATES.key(@country_subdivision)
-      end
-      @country_subdivision
     end
   end
 end

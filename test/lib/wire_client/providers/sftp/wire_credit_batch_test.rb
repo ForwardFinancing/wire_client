@@ -22,6 +22,10 @@ class SftpProvider
         wire_routing_number: '111900659',
         agent_name: 'BANK OF AMERICA',
         account_number: '3019586020',
+        postal_code: '02115',
+        address_line: '1 Nowhere Line',
+        city: 'Boston',
+        country_subdivision: 'MA',
         country: 'US',
         instruction: '1234/ABC',
         amount: 102.50
@@ -38,8 +42,11 @@ class SftpProvider
         assert_includes file_body, "<CreDtTm>2016-08-11"
         assert_includes file_body, "<ChrgBr>DEBT</ChrgBr>"
         assert_includes file_body, "<Nm>#{WireClient::HSBC::WireBatch.initiator_name}</Nm>"
-        assert_includes file_body, "<Ctry>US</Ctry>"
+        assert_includes file_body, "<PstCd>02115</PstCd>"
+        assert_includes file_body, "<AdrLine>1 Nowhere Line</AdrLine>"
+        assert_includes file_body, "<TwnNm>Boston</TwnNm>"
         assert_includes file_body, "<CtrySubDvsn>MA</CtrySubDvsn>"
+        assert_includes file_body, "<Ctry>US</Ctry>"
         assert_includes file_body, "<Id>#{WireClient::HSBC::WireBatch.initiator_identifier}</Id>"
         assert_includes file_body, "<Id>#{WireClient::HSBC::WireBatch.initiator_account_number}</Id>"
         assert_includes file_body, "<MmbId>#{WireClient::HSBC::WireBatch.initiator_wire_routing_number}</MmbId>"
@@ -76,8 +83,11 @@ class SftpProvider
         assert_includes file_body, "<CreDtTm>2016-08-11"
         assert_includes file_body, "<ChrgBr>DEBT</ChrgBr>"
         assert_includes file_body, "<Nm>#{WireClient::HSBC::WireBatch.initiator_name}</Nm>"
-        assert_includes file_body, "<Ctry>US</Ctry>"
+        assert_includes file_body, "<PstCd>NA</PstCd>"
+        assert_includes file_body, "<AdrLine>NA</AdrLine>"
+        assert_includes file_body, "<TwnNm>NA</TwnNm>"
         assert_includes file_body, "<CtrySubDvsn>MA</CtrySubDvsn>"
+        assert_includes file_body, "<Ctry>US</Ctry>"
         assert_includes file_body, "<Id>#{WireClient::HSBC::WireBatch.initiator_identifier}</Id>"
         assert_includes file_body, "<Id>#{WireClient::HSBC::WireBatch.initiator_account_number}</Id>"
         assert_includes file_body, "<MmbId>#{WireClient::HSBC::WireBatch.initiator_wire_routing_number}</MmbId>"

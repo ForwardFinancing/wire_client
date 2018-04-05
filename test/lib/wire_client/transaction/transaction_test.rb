@@ -10,6 +10,10 @@ describe WireClient::Transaction do
       assert_equal WireClient::Transaction.new.country, 'US'
     end
 
+    it 'should have default for country_subdivision' do
+      assert_equal WireClient::Transaction.new.country_subdivision, 'MA'
+    end
+
     it 'should have default for clear_system_code' do
       assert_equal WireClient::Transaction.new.clear_system_code, 'USABA'
     end
@@ -104,6 +108,38 @@ describe WireClient::Transaction do
         values: ['USD', 'invalid', 'etc', 'U'],
         attributes: [:country]
       )
+    end
+  end
+
+  describe :country_subdivision_abbr do
+    it 'should be nil when the country is not the US' do
+      subject = WireClient::Transaction.new country: 'AR'
+      assert_nil subject.country_subdivision_abbr
+    end
+
+    it 'should provide the correct abbreviation for US states' do
+      subject = WireClient::Transaction.new country: 'US',
+                                        country_subdivision: 'MA'
+      assert_equal subject.country_subdivision_abbr, 'MA'
+      subject = WireClient::Transaction.new country: 'US',
+                                        country_subdivision: 'Massachusetts'
+      assert_equal subject.country_subdivision_abbr, 'MA'
+    end
+  end
+
+  describe :country_subdivision_name do
+    it 'should be nil when the country is not the US' do
+      subject = WireClient::Transaction.new country: 'AR'
+      assert_nil subject.country_subdivision_name
+    end
+
+    it 'should provide the correct abbreviation for US states' do
+      subject = WireClient::Transaction.new country: 'US',
+                                        country_subdivision: 'MA'
+      assert_equal subject.country_subdivision_name, 'Massachusetts'
+      subject = WireClient::Transaction.new country: 'US',
+                                        country_subdivision: 'Massachusetts'
+      assert_equal subject.country_subdivision_name, 'Massachusetts'
     end
   end
 

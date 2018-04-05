@@ -1,6 +1,7 @@
 module WireClient
   class Transaction
     include ActiveModel::Validations
+    include AccountTransactionHelpers
     extend Converter
 
     attr_accessor :name,
@@ -9,8 +10,13 @@ module WireClient
                   :account_number,
                   :wire_routing_number,
                   :clear_system_code,
-                  :agent_name,
+                  :postal_code,
+                  :address_line,
+                  :city,
+                  :country_subdivision,
                   :country,
+                  :currency,
+                  :agent_name,
                   :amount,
                   :instruction,
                   :reference,
@@ -20,14 +26,13 @@ module WireClient
                   :currency,
                   :service_priority,
                   :service_level
+
     convert :name,
             :instruction,
             :reference,
             :remittance_information, to: :text
     convert :amount, to: :decimal
 
-    validates_length_of :name, within: 1..70
-    validates_length_of :currency, is: 3
     validates_length_of :instruction, within: 1..35, allow_nil: true
     validates_length_of :reference, within: 1..35, allow_nil: true
     validates_length_of :remittance_information,
@@ -36,8 +41,11 @@ module WireClient
     validates_numericality_of :amount, greater_than: 0
     validates_presence_of :requested_date
     validates_inclusion_of :batch_booking, :in => [true, false]
+    validates_length_of :currency, is: 3
+    validates_length_of :name, within: 1..70
     validates_with CurrencyValidator,
                    CountryValidator,
+                   CountrySubdivisionValidator,
                    BICValidator,
                    IBANValidator,
                    message: "%{value} is invalid"
@@ -48,7 +56,11 @@ module WireClient
       end
 
       @currency ||= 'USD'
+      @postal_code ||= 'NA'
+      @address_line ||= 'NA'
+      @city ||= 'NA'
       @country ||= 'US'
+      @country_subdivision ||= 'MA' if self.country == 'US'
       @clear_system_code ||= 'USABA'
       @agent_name ||= 'NOTPROVIDED'
       @requested_date ||= default_requested_date

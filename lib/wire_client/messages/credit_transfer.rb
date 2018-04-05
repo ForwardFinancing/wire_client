@@ -42,8 +42,7 @@ module WireClient
           builder.Dbtr do
             builder.Nm(account.name)
             builder.PstlAdr do
-              builder.CtrySubDvsn(account.country_subdivision_abbr)
-              builder.Ctry(account.country)
+              entity_address(builder, account)
             end
           end
           builder.DbtrAcct do
@@ -51,7 +50,7 @@ module WireClient
           end
           builder.DbtrAgt do
             builder.FinInstnId do
-              account_agent_id(builder, account)
+              entity_agent_id(builder, account)
               builder.PstlAdr do
                 builder.Ctry(account.country)
               end
@@ -85,7 +84,7 @@ module WireClient
         end
         builder.CdtrAgt do
           builder.FinInstnId do
-            transaction_agent_id(builder, transaction)
+            entity_agent_id(builder, transaction)
             builder.Nm(transaction.agent_name)
             builder.PstlAdr do
               builder.Ctry(transaction.country)
@@ -95,7 +94,7 @@ module WireClient
         builder.Cdtr do
           builder.Nm(transaction.name)
           builder.PstlAdr do
-            builder.Ctry(transaction.country)
+            entity_address(builder, transaction)
           end
         end
         builder.CdtrAcct do

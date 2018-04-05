@@ -151,15 +151,23 @@ module WireClient
       transaction
     end
 
-    def account_agent_id(builder, account)
-      if account.bic
-        builder.BIC(account.bic)
+    def entity_address(builder, entity)
+      builder.PstCd(entity.postal_code)
+      builder.TwnNm(entity.city)
+      builder.CtrySubDvsn(entity.country_subdivision_abbr)
+      builder.AdrLine(entity.address_line)
+      builder.Ctry(entity.country)
+    end
+
+    def entity_agent_id(builder, entity)
+      if entity.bic
+        builder.BIC(entity.bic)
       else
         builder.ClrSysMmbId do
           builder.ClrSysId do
-            builder.Cd(account.clear_system_code)
+            builder.Cd(entity.clear_system_code)
           end
-          builder.MmbId(account.wire_routing_number)
+          builder.MmbId(entity.wire_routing_number)
         end
       end
     end
@@ -179,19 +187,6 @@ module WireClient
           builder.Cd('CACC')
         end
         builder.Ccy(account.currency)
-      end
-    end
-
-    def transaction_agent_id(builder, transaction)
-      if transaction.bic
-        builder.BIC(transaction.bic)
-      else
-        builder.ClrSysMmbId do
-          builder.ClrSysId do
-            builder.Cd(transaction.clear_system_code)
-          end
-          builder.MmbId(transaction.wire_routing_number)
-        end
       end
     end
 

@@ -30,13 +30,23 @@ module WireClient
       # @return [String] The initiating party's Identifier
       class_attribute :initiator_identifier
 
-      # @return [String] The initiating party's country (2 character country
-      # code; default: US)
-      class_attribute :initiator_country
+      # @return [String] The initiating party's Postal code (default: NA)
+      class_attribute :initiator_postal_code
+
+      # @return [String] The initiating party's Address line (default: NA)
+      class_attribute :initiator_address_line
+
+      # @return [String] The initiating party's City, town or municipality
+      # (default: NA)
+      class_attribute :initiator_city
 
       # @return [String] The initiating party's country subdivision (name or
       # 2 character code; default: MA)
       class_attribute :initiator_country_subdivision
+
+      # @return [String] The initiating party's country (2 character country
+      # code; default: US)
+      class_attribute :initiator_country
 
       ##
       # @return [Array] A list of arguments to use in the initializer, and as
@@ -101,8 +111,11 @@ module WireClient
             bic: self.class.initiator_bic,
             iban: self.class.initiator_iban,
             identifier: self.class.initiator_identifier,
-            country: self.class.initiator_country,
-            country_subdivision: self.class.initiator_country_subdivision
+            postal_code: self.class.initiator_postal_code,
+            address_line: self.class.initiator_address_line,
+            city: self.class.initiator_city,
+            country_subdivision: self.class.initiator_country_subdivision,
+            country: self.class.initiator_country
           )
         else
           @payment_initiation = klass.new(
@@ -110,8 +123,11 @@ module WireClient
             wire_routing_number: self.class.initiator_wire_routing_number,
             account_number: self.class.initiator_account_number,
             identifier: self.class.initiator_identifier,
-            country: self.class.initiator_country,
-            country_subdivision: self.class.initiator_country_subdivision
+            postal_code: self.class.initiator_postal_code,
+            address_line: self.class.initiator_address_line,
+            city: self.class.initiator_city,
+            country_subdivision: self.class.initiator_country_subdivision,
+            country: self.class.initiator_country
           )
         end
       end
