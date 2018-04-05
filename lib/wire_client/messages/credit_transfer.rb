@@ -29,7 +29,9 @@ module WireClient
         builder.PmtInf do
           builder.PmtInfId(payment_information_identification(group))
           builder.PmtMtd('TRF')
+          builder.BtchBookg(group[:batch_booking])
           builder.NbOfTxs(transactions.length)
+          builder.CtrlSum('%.2f' % amount_total(transactions))
           builder.PmtTpInf do
             builder.InstrPrty(group[:service_priority])
             builder.SvcLvl do
@@ -37,8 +39,6 @@ module WireClient
             end
           end
           builder.ReqdExctnDt(group[:requested_date].iso8601)
-          builder.BtchBookg(group[:batch_booking])
-          builder.CtrlSum('%.2f' % amount_total(transactions))
           builder.Dbtr do
             builder.Nm(account.name)
             builder.PstlAdr do
