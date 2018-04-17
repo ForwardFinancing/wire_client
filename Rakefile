@@ -14,12 +14,12 @@ Rake::TestTask.new(:test) do |t|
   t.test_files = FileList['test/**/*_test.rb']
 end
 
-desc 'Build the sequel-seed gem'
+desc 'Build the gem'
 task :build do
   sh %{#{FileUtils::RUBY} -S gem build #{GEM}.gemspec}
 end
 
-desc 'Release the sequel-seed gem to rubygems.org'
+desc 'Release the gem to rubygems.org'
 task release: :build do
   sh %{#{FileUtils::RUBY} -S gem push ./#{GEM}-#{VERSION}.gem}
 end
