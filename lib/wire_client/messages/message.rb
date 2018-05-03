@@ -155,8 +155,8 @@ module WireClient
       builder.PstCd(entity.postal_code)
       builder.TwnNm(entity.city)
       builder.CtrySubDvsn(entity.country_subdivision_abbr)
-      builder.AdrLine(entity.address_line)
       builder.Ctry(entity.country)
+      builder.AdrLine(entity.address_line)
     end
 
     def entity_agent_id(builder, entity)
