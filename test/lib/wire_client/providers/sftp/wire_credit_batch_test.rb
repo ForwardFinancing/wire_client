@@ -4,17 +4,17 @@ class SftpProvider
   class WireCreditBatchTest < MiniTest::Test
     def conn_info
       lambda do |host, username, options|
-        assert_equal WireClient::HSBC.host, host
-        assert_equal WireClient::HSBC.username, username
+        assert_equal WireClient::FakeBank.host, host
+        assert_equal WireClient::FakeBank.username, username
         assert_equal ({
-          key_data: [WireClient::HSBC.private_ssh_key],
-          password: WireClient::HSBC.password,
+          key_data: [WireClient::FakeBank.private_ssh_key],
+          password: WireClient::FakeBank.password,
         }), options
       end
     end
 
     def first_credit_batch
-      sample = WireClient::HSBC::WireBatch.new(
+      sample = WireClient::FakeBank::WireBatch.new(
         transaction_type: WireClient::TransactionTypes::Credit
       )
       sample.add_transaction(
@@ -41,15 +41,15 @@ class SftpProvider
         assert_includes file_body, "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<Document xmlns=\"urn:iso:std:iso:20022:tech:xsd:pain.001.001.03\" xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xsi:schemaLocation=\"urn:iso:std:iso:20022:tech:xsd:pain.001.001.03 pain.001.001.03.xsd\">"
         assert_includes file_body, "<CreDtTm>2016-08-11"
         assert_includes file_body, "<ChrgBr>DEBT</ChrgBr>"
-        assert_includes file_body, "<Nm>#{WireClient::HSBC::WireBatch.initiator_name}</Nm>"
+        assert_includes file_body, "<Nm>#{WireClient::FakeBank::WireBatch.initiator_name}</Nm>"
         assert_includes file_body, "<PstCd>02115</PstCd>"
         assert_includes file_body, "<AdrLine>1 Nowhere Line</AdrLine>"
         assert_includes file_body, "<TwnNm>Boston</TwnNm>"
         assert_includes file_body, "<CtrySubDvsn>MA</CtrySubDvsn>"
         assert_includes file_body, "<Ctry>US</Ctry>"
-        assert_includes file_body, "<Id>#{WireClient::HSBC::WireBatch.initiator_identifier}</Id>"
-        assert_includes file_body, "<Id>#{WireClient::HSBC::WireBatch.initiator_account_number}</Id>"
-        assert_includes file_body, "<MmbId>#{WireClient::HSBC::WireBatch.initiator_wire_routing_number}</MmbId>"
+        assert_includes file_body, "<Id>#{WireClient::FakeBank::WireBatch.initiator_identifier}</Id>"
+        assert_includes file_body, "<Id>#{WireClient::FakeBank::WireBatch.initiator_account_number}</Id>"
+        assert_includes file_body, "<MmbId>#{WireClient::FakeBank::WireBatch.initiator_wire_routing_number}</MmbId>"
         assert_includes file_body, "<InstdAmt Ccy=\"USD\">102.50</InstdAmt>"
         assert_includes file_body, "<Nm>Some Merchant</Nm>"
         assert_includes file_body, "<Id>3019586020</Id>"
@@ -59,14 +59,14 @@ class SftpProvider
     end
 
     def second_credit_batch
-      sample = WireClient::HSBC::WireBatch.new(
+      sample = WireClient::FakeBank::WireBatch.new(
         transaction_type: WireClient::TransactionTypes::Credit
       )
       sample.add_transaction(
         name: 'John Doe from Ohio',
         wire_routing_number: '021000089',
         account_number: '42349053',
-        agent_name: 'HSBC',
+        agent_name: 'FakeBank',
         country: 'US',
         remittance_information: 'Any information about the transaction',
         amount: 202.50
@@ -82,15 +82,15 @@ class SftpProvider
         assert_includes file_body, "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<Document xmlns=\"urn:iso:std:iso:20022:tech:xsd:pain.001.001.03\" xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xsi:schemaLocation=\"urn:iso:std:iso:20022:tech:xsd:pain.001.001.03 pain.001.001.03.xsd\">"
         assert_includes file_body, "<CreDtTm>2016-08-11"
         assert_includes file_body, "<ChrgBr>DEBT</ChrgBr>"
-        assert_includes file_body, "<Nm>#{WireClient::HSBC::WireBatch.initiator_name}</Nm>"
+        assert_includes file_body, "<Nm>#{WireClient::FakeBank::WireBatch.initiator_name}</Nm>"
         assert_includes file_body, "<PstCd>NA</PstCd>"
         assert_includes file_body, "<AdrLine>NA</AdrLine>"
         assert_includes file_body, "<TwnNm>NA</TwnNm>"
         assert_includes file_body, "<CtrySubDvsn>MA</CtrySubDvsn>"
         assert_includes file_body, "<Ctry>US</Ctry>"
-        assert_includes file_body, "<Id>#{WireClient::HSBC::WireBatch.initiator_identifier}</Id>"
-        assert_includes file_body, "<Id>#{WireClient::HSBC::WireBatch.initiator_account_number}</Id>"
-        assert_includes file_body, "<MmbId>#{WireClient::HSBC::WireBatch.initiator_wire_routing_number}</MmbId>"
+        assert_includes file_body, "<Id>#{WireClient::FakeBank::WireBatch.initiator_identifier}</Id>"
+        assert_includes file_body, "<Id>#{WireClient::FakeBank::WireBatch.initiator_account_number}</Id>"
+        assert_includes file_body, "<MmbId>#{WireClient::FakeBank::WireBatch.initiator_wire_routing_number}</MmbId>"
         assert_includes file_body, "<InstdAmt Ccy=\"USD\">202.50</InstdAmt>"
         assert_includes file_body, "<Nm>John Doe from Ohio</Nm>"
         assert_includes file_body, "<Id>42349053</Id>"
