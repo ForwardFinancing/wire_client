@@ -15,7 +15,7 @@ require 'minitest/reporters'
 Minitest.backtrace_filter = Minitest::BacktraceFilter.new
 Minitest::Reporters.use!
 
-require 'mocha/mini_test'
+require 'mocha/minitest'
 require 'pry'
 
 # Freeze time so we don't have to worry about Time.now relativity
