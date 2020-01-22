@@ -44,6 +44,7 @@ class SftpProvider
         assert_includes file_body, "<Nm>#{WireClient::HSBC::WireBatch.initiator_name}</Nm>"
         assert_includes file_body, "<PstCd>02115</PstCd>"
         assert_includes file_body, "<AdrLine>1 Nowhere Line</AdrLine>"
+        assert_includes file_body, "<StrtNm>1 Nowhere Line</StrtNm>"
         assert_includes file_body, "<TwnNm>Boston</TwnNm>"
         assert_includes file_body, "<CtrySubDvsn>MA</CtrySubDvsn>"
         assert_includes file_body, "<Ctry>US</Ctry>"
