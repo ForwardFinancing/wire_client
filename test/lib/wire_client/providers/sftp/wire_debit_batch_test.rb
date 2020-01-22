@@ -3,7 +3,7 @@ require 'test_helper'
 class SftpProvider
   class WireDebitBatchTest < MiniTest::Test
     def eur_debit_batch
-      sample = WireClient::HSHNordbankHamburg::WireBatch.new(
+      sample = WireClient::OtherFakeBank::WireBatch.new(
         transaction_type: WireClient::TransactionTypes::Debit
       )
       sample.add_transaction(
@@ -24,7 +24,7 @@ class SftpProvider
     end
 
     def gbp_debit_batch
-      sample = WireClient::HSHNordbankHamburg::WireBatch.new(
+      sample = WireClient::OtherFakeBank::WireBatch.new(
         transaction_type: WireClient::TransactionTypes::Debit
       )
       sample.add_transaction(
@@ -44,7 +44,7 @@ class SftpProvider
     end
 
     def usd_debit_batch
-      sample = WireClient::HSHNordbankHamburg::WireBatch.new(
+      sample = WireClient::OtherFakeBank::WireBatch.new(
         transaction_type: WireClient::TransactionTypes::Debit
       )
       sample.add_transaction(
@@ -62,11 +62,11 @@ class SftpProvider
 
     def conn_info
       lambda do |host, username, options|
-        assert_equal WireClient::HSHNordbankHamburg.host, host
-        assert_equal WireClient::HSHNordbankHamburg.username, username
+        assert_equal WireClient::OtherFakeBank.host, host
+        assert_equal WireClient::OtherFakeBank.username, username
         assert_equal ({
-          key_data: [WireClient::HSHNordbankHamburg.private_ssh_key],
-          password: WireClient::HSHNordbankHamburg.password,
+          key_data: [WireClient::OtherFakeBank.private_ssh_key],
+          password: WireClient::OtherFakeBank.password,
         }), options
       end
     end
@@ -80,7 +80,7 @@ class SftpProvider
         assert_includes file_body, "<CreDtTm>2016-08-11"
         assert_includes file_body, "<ChrgBr>CRED</ChrgBr>"
         assert_includes file_body, "<Nm>Business from Germany</Nm>"
-        assert_includes file_body, "<IBAN>#{WireClient::HSHNordbankHamburg::WireBatch.initiator_iban}</IBAN>"
+        assert_includes file_body, "<IBAN>#{WireClient::OtherFakeBank::WireBatch.initiator_iban}</IBAN>"
         assert_includes file_body, "<InstdAmt Ccy=\"EUR\">102.50</InstdAmt>"
         assert_includes file_body, "<Nm>Zahlemann &amp; Söhne GbR</Nm>"
         assert_includes file_body, "<IBAN>DE21500500009876543210</IBAN>"
@@ -97,7 +97,7 @@ class SftpProvider
         assert_includes file_body, "<CreDtTm>2016-08-11"
         assert_includes file_body, "<ChrgBr>CRED</ChrgBr>"
         assert_includes file_body, "<Nm>Business from Germany</Nm>"
-        assert_includes file_body, "<IBAN>#{WireClient::HSHNordbankHamburg::WireBatch.initiator_iban}</IBAN>"
+        assert_includes file_body, "<IBAN>#{WireClient::OtherFakeBank::WireBatch.initiator_iban}</IBAN>"
         assert_includes file_body, "<InstdAmt Ccy=\"GBP\">102.50</InstdAmt>"
         assert_includes file_body, "<Nm>UK Corp</Nm>"
         assert_includes file_body, "<IBAN>GB29NWBK60161331926819</IBAN>"
@@ -114,7 +114,7 @@ class SftpProvider
         assert_includes file_body, "<CreDtTm>2016-08-11"
         assert_includes file_body, "<ChrgBr>CRED</ChrgBr>"
         assert_includes file_body, "<Nm>Business from Germany</Nm>"
-        assert_includes file_body, "<IBAN>#{WireClient::HSHNordbankHamburg::WireBatch.initiator_iban}</IBAN>"
+        assert_includes file_body, "<IBAN>#{WireClient::OtherFakeBank::WireBatch.initiator_iban}</IBAN>"
         assert_includes file_body, "<InstdAmt Ccy=\"EUR\">102.50</InstdAmt>"
         assert_includes file_body, "<Nm>Zahlemann &amp; Söhne GbR</Nm>"
         assert_includes file_body, "<IBAN>DE21500500009876543210</IBAN>"
