@@ -12,13 +12,13 @@ module WireClient
       # The filename used for the batch
       # @return [String] filename to use
       def batch_file_name
-        self.class.parent.file_naming_strategy.(@batch_number)
+        self.class.module_parent.file_naming_strategy.(@batch_number)
       end
 
       # Sends the batch to SFTP provider
       def do_send_batch
         file_path = File.join(
-          self.class.parent.outgoing_path,
+          self.class.module_parent.outgoing_path,
           batch_file_name
         )
         file_body = begin
@@ -28,7 +28,7 @@ module WireClient
             @payment_initiation.to_xml('pain.008.001.02').to_s
           end
         end
-        self.class.parent.write_remote_file(
+        self.class.module_parent.write_remote_file(
           file_path: file_path,
           file_body: file_body
         )

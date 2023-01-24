@@ -34,7 +34,7 @@ Gem::Specification.new do |spec|
   spec.add_dependency 'ach_client'
 
   # Handy ruby behavior from rails
-  spec.add_dependency 'activesupport'
+  spec.add_dependency 'activesupport', '~> 6'
   spec.add_dependency 'activemodel'
 
   # Provide a simple way to create XML markup and data structures
@@ -49,7 +49,7 @@ Gem::Specification.new do |spec|
   # Asynchronocity w/out extra infrastucture dependency (database/redis)
   spec.add_dependency 'sucker_punch', '~> 2'
 
-  spec.add_development_dependency 'bundler', '~> 1.12'
+  #spec.add_development_dependency 'bundler', '~> 2.1.4'
   spec.add_development_dependency 'codeclimate-test-reporter'
   spec.add_development_dependency 'minitest-reporters'
   spec.add_development_dependency 'minitest', '~> 5'
