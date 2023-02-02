@@ -47,7 +47,7 @@ Gem::Specification.new do |spec|
   spec.add_dependency 'net-sftp'
 
   # Asynchronocity w/out extra infrastucture dependency (database/redis)
-  spec.add_dependency 'sucker_punch', '~> 2'
+  spec.add_dependency 'sucker_punch', '>= 2'
 
   #spec.add_development_dependency 'bundler', '~> 2.1.4'
   spec.add_development_dependency 'codeclimate-test-reporter'
