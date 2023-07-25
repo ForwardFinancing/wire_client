@@ -34,7 +34,7 @@ Gem::Specification.new do |spec|
   spec.add_dependency 'ach_client'
 
   # Handy ruby behavior from rails
-  spec.add_dependency 'activesupport', '~> 6'
+  spec.add_dependency 'activesupport', '>= 6'
   spec.add_dependency 'activemodel'
 
   # Provide a simple way to create XML markup and data structures
