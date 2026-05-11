@@ -1,7 +1,7 @@
 require 'test_helper'
 
 class SftpProvider
-  class WireCreditBatchTest < MiniTest::Test
+  class WireCreditBatchTest < Minitest::Test
     def conn_info
       lambda do |host, username, options|
         assert_equal WireClient::HSBC.host, host

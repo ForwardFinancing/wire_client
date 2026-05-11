@@ -1,7 +1,7 @@
 require 'test_helper'
 
 class SftpProvider
-  class WireDebitBatchTest < MiniTest::Test
+  class WireDebitBatchTest < Minitest::Test
     def eur_debit_batch
       sample = WireClient::HSHNordbankHamburg::WireBatch.new(
         transaction_type: WireClient::TransactionTypes::Debit
