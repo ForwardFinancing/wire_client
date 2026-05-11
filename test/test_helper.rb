@@ -27,7 +27,7 @@ require 'sucker_punch/testing/inline'
 
 require 'wire_client'
 
-module MiniTest::Assertions
+module Minitest::Assertions
   def assert_valid_values(klass, values:, attributes:)
     attributes.each do |attribute|
       values.each do |value|
